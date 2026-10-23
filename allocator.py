@@ -65,7 +65,7 @@ class Engine(Cube):
         self.count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
 
 
-    def __call__ (self, address = 0)
+    def __call__ (self, address = 0):
         "in monadic mode, allocates; in dyadic mode, deallocates"
 
         return 0
