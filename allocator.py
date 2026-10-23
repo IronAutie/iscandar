@@ -1,8 +1,11 @@
-from Geometry import Geometry
-from Cube     import Cube
-from Modes    import Modes
-from array    import array
+from Coordinate import Coordinate
+from MPUPointer import MPUPointer
 
+from Geometry   import Geometry
+from Cube       import Cube
+from Modes      import Modes
+
+from array      import array
 
 
 
@@ -23,5 +26,10 @@ class Engine (Cube):
 
 
     def __call__ (self, request):
-        return self.modes (request)
+        result = self.modes (request)
+
+        if isinstance (result, Coordinate):
+            return MPUPointer.load_coordinate (result, request)
+
+        return result
         
