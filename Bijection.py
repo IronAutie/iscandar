@@ -4,7 +4,7 @@ from Coordinate import Coordinate
 
 
 class Bijection:
-    """Conversions from paper: address <-> coordinate, exactly."""
+    """Conversions from paper: displacement <-> coordinate, exactly."""
 
     A = Geometry.ARITY
 
@@ -13,6 +13,7 @@ class Bijection:
         row, sector = divmod (rem, self.A)
         return Coordinate (sector=sector, row=row, plane=plane)
 
-    def to_displacement (self, sector):
-        return (sector.plane * self.A + sector.row) * self.A + sector.sector
+    def to_displacement (self, coordinate):
+        return (coordinate.plane * self.A + coordinate.row)
+                * self.A + coordinate.sector
 
