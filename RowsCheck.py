@@ -32,7 +32,7 @@ class RowsCheck:
         result [16] = (request <= remaining_in_row (16)) 
         result [17] = (request <= remaining_in_row (17)) 
         result [18] = (request <= remaining_in_row (18)) 
-        result [19] = (request <= remaining_in_row (19) 
+        result [19] = (request <= remaining_in_row (19))
         result [20] = (request <= remaining_in_row (20))  
         result [21] = (request <= remaining_in_row (21)) 
         result [22] = (request <= remaining_in_row (22)) 
