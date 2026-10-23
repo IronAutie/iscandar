@@ -61,6 +61,9 @@ class Modes (dict):
     def nothing    (self):
         return 0
 
+    def nano       (self):
+        return 0
+
     def tiny       (self):
         return 0
 
@@ -78,6 +81,10 @@ class Modes (dict):
 
     def __init__   (self):
         """ create decision table here """
+
+        super().__init__({L: self.nothing for L in range(0, 0)})
+        super().__init__({L: self.nano    for L in range(1, 4)})
+
 
     def __call__   (self, request):
         return self.get (request, nothing) (request)
