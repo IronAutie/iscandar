@@ -16,3 +16,9 @@ class Cube(dict):
         plane = Plane()
         self[i] = plane
         return plane
+
+    def check (self, request):
+        if plane == PLANES_PER_CUBE:
+            return FAIL
+
+        return SUCCESS
