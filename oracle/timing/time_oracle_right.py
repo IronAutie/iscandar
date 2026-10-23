@@ -2,8 +2,10 @@
 """Time random row lookups in OracleRight.bin through mmap.
 
 Each lookup reads the complete 2-byte row for one uniformly random
-32-bit occupancy state.  The script reports three passes:
+32-bit occupancy state.  The script reports a null-baseline pass and three oracle passes:
 
+* null baseline: the same states and loop, but the pass sums a
+  constant dummy row instead of reading the table;
 * first-touch A: the A states, in the cache state in which they are found;
 * warm repeat A: the same A states again, normally served from the OS
   page cache after the first pass;
@@ -28,6 +30,7 @@ ROW_WIDTH = 2
 EXPECTED_SIZE = (1 << 32) * ROW_WIDTH
 DEFAULT_SAMPLES = 20_000
 DEFAULT_SEED = 20261022
+DUMMY_ROW = bytes(range(1, ROW_WIDTH + 1))
 
 
 def default_file() -> Path:
@@ -47,14 +50,43 @@ def time_pass(table: mmap.mmap, states: list[int]) -> tuple[float, int]:
     return elapsed_ns / 1_000_000_000, checksum
 
 
-def report(label: str, seconds: float, samples: int, checksum: int) -> None:
+def time_null_pass(states: list[int]) -> tuple[float, int]:
+    """Run the lookup loop without reading the oracle table."""
+    checksum = 0
+    started = time.perf_counter_ns()
+    for state in states:
+        offset = state * ROW_WIDTH
+        checksum = (checksum + (offset & 0) + sum(DUMMY_ROW)) & 0xFFFFFFFFFFFFFFFF
+    elapsed_ns = time.perf_counter_ns() - started
+    return elapsed_ns / 1_000_000_000, checksum
+
+
+def report(
+    label: str,
+    seconds: float,
+    samples: int,
+    checksum: int,
+    null_seconds: float | None = None,
+) -> None:
     microseconds = seconds * 1_000_000 / samples
     rate = samples / seconds if seconds else float("inf")
-    print(
+    line = (
         f"{label:16s} {seconds:9.3f} s  "
         f"{microseconds:11.1f} us/lookup  "
         f"{rate:12.1f} lookups/s  checksum {checksum}"
     )
+    if null_seconds is not None:
+        corrected_seconds = seconds - null_seconds
+        if corrected_seconds > 0:
+            corrected_us = corrected_seconds * 1_000_000 / samples
+            corrected_rate = samples / corrected_seconds
+            line += (
+                f" | null-corrected {corrected_us:11.1f} us/lookup  "
+                f"{corrected_rate:12.1f} lookups/s"
+            )
+        else:
+            line += " | null-corrected <= 0 (within noise)"
+    print(line)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -105,8 +137,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Row width:    {ROW_WIDTH} bytes")
     print(f"Samples/pass: {args.samples}")
     print(f"Seed:         {args.seed}")
-    print("Method:       random full-row lookups through mmap")
+    print("Method:       random full-row lookups through mmap, with null baseline")
     print()
+
+    null_seconds, null_checksum = time_null_pass(states_a)
 
     with path.open("rb") as handle:
         table = mmap.mmap(handle.fileno(), 0, access=mmap.ACCESS_READ)
@@ -117,9 +151,10 @@ def main(argv: list[str] | None = None) -> int:
         finally:
             table.close()
 
-    report("first-touch A", first_seconds, args.samples, first_checksum)
-    report("warm repeat A", warm_seconds, args.samples, warm_checksum)
-    report("first-touch B", new_seconds, args.samples, new_checksum)
+    report("null baseline", null_seconds, args.samples, null_checksum)
+    report("first-touch A", first_seconds, args.samples, first_checksum, null_seconds)
+    report("warm repeat A", warm_seconds, args.samples, warm_checksum, null_seconds)
+    report("first-touch B", new_seconds, args.samples, new_checksum, null_seconds)
     if warm_checksum != first_checksum:
         print("error: warm-pass checksum does not match the first pass", file=sys.stderr)
         return 1
