@@ -9,7 +9,7 @@ class Small (Mode):
     def range    (self):
         "reveal at which this __call__ is invoked"
 
-        return self.inclusive (Row.SECTORS_PER_ROW,
+        return self.inclusive (Row.SECTORS_PER_ROW + 1,
                                Row.SECTORS_TWEEN_ROWS)
 
     def __call__ (self, request):

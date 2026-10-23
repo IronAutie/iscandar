@@ -9,7 +9,7 @@ class Tiny (Mode):
     def range    (self):
         "reveal at which this __call__ is invoked"
 
-        return self.inclusive (Geometry.SECTORS_PER_BYTE,
+        return self.inclusive (Geometry.SECTORS_PER_BYTE + 1,
                                Row.SECTORS_PER_ROW)
 
     def __call__ (self, request):
