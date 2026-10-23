@@ -32,14 +32,14 @@ class Modes (dict):
         self.huge    = Huge      ()
         self.cube    = CubeCheck ()
 
-        super().__init__({L: self.error   for L in self.range ()})
-        super().__init__({L: self.nothing for L in self.range ()})
-        super().__init__({L: self.nano    for L in self.range ()})
-        super().__init__({L: self.tiny    for L in self.range ()})
-        super().__init__({L: self.small   for L in self.range ()})
-        super().__init__({L: self.large   for L in self.range ()})
-        super().__init__({L: self.huge    for L in self.range ()})  
-        super().__init__({L: self.cubecheck for L in self.range ()})
+        super().__init__({L: self.error   for L in self.error.range ()})
+        super().__init__({L: self.nothing for L in self.nothing.range ()})
+        super().__init__({L: self.nano    for L in self.nano.range ()})
+        super().__init__({L: self.tiny    for L in self.tiny.range ()})
+        super().__init__({L: self.small   for L in self.small.range ()})
+        super().__init__({L: self.large   for L in self.large.range ()})
+        super().__init__({L: self.huge    for L in self.huge.range ()})  
+        super().__init__({L: self.cube    for L in self.cube.range ()})
                                                             
 
     def __call__   (self, request):

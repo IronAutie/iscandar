@@ -19,7 +19,7 @@ class Coordinate:
                 + self.plane * Plane.SECTORS_PER_PLANE)
 
     def __eq__(self, other):
-        if not isinstance(other, Address):
+        if not isinstance(other, Coordinate):
             return NotImplemented
         return (self.sector, self.row, self.plane) == \
                (other.sector, other.row, other.plane)
