@@ -22,7 +22,7 @@ class Error (Mode):
         by other handlers """
 
     def range (self):
-        return for L in self.inclusive (0, Cube.SECTORS_PER_CUBE)})
+        return self.inclusive (0, Cube.SECTORS_PER_CUBE)
 
 
 class Nothing (Mode):
