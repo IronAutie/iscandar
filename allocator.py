@@ -1,3 +1,6 @@
+from array import array
+
+
 class Geometry:
     """ Shape of the system from paper """
     ARITY      = 32
@@ -41,7 +44,7 @@ class Cube(dict):
 
     PLANES_PER_CUBE    = Geometry.ARITY
     ROWS_PER_CUBE      = PLANES_PER_CUBE * Plane.ROWS_PER_PLANE
-    SECTORS__PER_CUBE  = PLANES_PER_CUBE * Plane.SECTORS_PER_PLANE
+    SECTORS_PER_CUBE   = PLANES_PER_CUBE * Plane.SECTORS_PER_PLANE
 
     def __init__(self):
         super().__init__((i, Plane()) for i in range(Geometry.ARITY))
@@ -52,10 +55,19 @@ class Cube(dict):
         return plane
 
 
+
 class Engine(Cube):
 
     def __init__ (self):
-        count_overall = 0
-        count_planes  = array('I', [0] * Cube.PLANES_PER_CUBE) 
-        count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
+        """ initialize a Cube """
+        self.count_overall = 0
+        self.count_planes  = array('I', [0] * Cube.PLANES_PER_CUBE) 
+        self.count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
+
+
+    def __call__ (self, address = 0)
+        "in monadic mode, allocates; in dyadic mode, deallocates"
+
+        return 0
+        
 
