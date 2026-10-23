@@ -56,7 +56,7 @@ class Cube(dict):
 
 
 
-class Modes (__dict__):
+class Modes (dict):
 
     def nothing    (self):
         return 0
@@ -82,7 +82,7 @@ class Modes (__dict__):
     def __call__   (self, request):
         return self.get (request, nothing) (request)
 
-        
+
 
 class Engine (Cube, Modes):
 
@@ -93,11 +93,10 @@ class Engine (Cube, Modes):
         self.count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
 
 
+    def deallocate (self, address):
+        """ stubbed """
 
 
-    def __call__ (self, address = 0):
-        "in monadic mode, allocates; in dyadic mode, deallocates"
-
-        return 0
+    def __call__ (self, request):
+        return Modes.__call__ (self, request)
         
-
