@@ -7,22 +7,57 @@ class RowsCheck:
     "Examine each row in plane with enough requested sectors"
 
 
-    
+
+    def vector2 (self, plane, request, handler, vector)
+        result = array (32)
+        result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
+ result [0] = vector [0] if vector [0] is not None else handler (plane, 0, request)
 
 
-    def vector (self, plane, request, handler):
+
+    def vector0 (self, plane, request, handler):
 
         result = array (32)
         result [ 0] = (request <= remaining_in_row (0)) 
-        result [ 1] = (request <= remaining_in_row (0)) 
-        result [ 2] = (request <= remaining_in_row (0)) 
-        result [ 3] = (request <= remaining_in_row (0)) 
-        result [ 4] = (request <= remaining_in_row (0)) 
-        result [ 5] = (request <= remaining_in_row (0)) 
-        result [ 6] = (request <= remaining_in_row (0)) 
-        result [ 7] = (request <= remaining_in_row (0)) 
-        result [ 8] = (request <= remaining_in_row (0)) 
-        result [ 9] = (request <= remaining_in_row (0)) 
+        result [ 1] = (request <= remaining_in_row (1)) 
+        result [ 2] = (request <= remaining_in_row (2)) 
+        result [ 3] = (request <= remaining_in_row (3)) 
+        result [ 4] = (request <= remaining_in_row (4)) 
+        result [ 5] = (request <= remaining_in_row (5)) 
+        result [ 6] = (request <= remaining_in_row (6)) 
+        result [ 7] = (request <= remaining_in_row (7)) 
+        result [ 8] = (request <= remaining_in_row (8)) 
+        result [ 9] = (request <= remaining_in_row (9)) 
         result [10] = (request <= remaining_in_row (10))  
         result [11] = (request <= remaining_in_row (11)) 
         result [12] = (request <= remaining_in_row (12)) 
@@ -45,6 +80,7 @@ class RowsCheck:
         result [29] = (request <= remaining_in_row (20)) 
         result [30] = (request <= remaining_in_row (30))  
         result [31] = (request <= remaining_in_row (31)) 
+        return result
 
 
     
