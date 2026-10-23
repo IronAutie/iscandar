@@ -141,10 +141,19 @@ def generate(name, outdir, rows=ROWS, chunk=1 << 21):
             S = np.arange(done, done + n, dtype=np.uint64).astype(np.uint32)
             f.write(builder(S).tobytes())
             done += n
-            if done % (chunk * 64) == 0 or done == rows:
-                pct = 100.0 * done / rows
+            pct = 100.0 * done / rows
+            elapsed = time.time() - t0
+            if sys.stdout.isatty():
+                filled = int(40 * done / rows)
+                bar = "#" * filled + "-" * (40 - filled)
+                print(f"\r[{name}] |{bar}| {pct:5.1f}%  "
+                      f"({done:,}/{rows:,} rows, {elapsed:.0f}s)",
+                      end="", flush=True)
+            elif done % (chunk * 64) == 0 or done == rows:
                 print(f"[{name}] {pct:5.1f}%  ({done:,}/{rows:,} rows, "
-                      f"{time.time() - t0:.0f}s)", flush=True)
+                      f"{elapsed:.0f}s)", flush=True)
+    if sys.stdout.isatty():
+        print()
     size = os.path.getsize(path)
     assert size == total_bytes, f"{path}: wrote {size}, expected {total_bytes}"
     print(f"[{name}] done: {path} ({size:,} bytes) in {time.time() - t0:.0f}s", flush=True)
