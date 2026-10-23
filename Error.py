@@ -9,4 +9,4 @@ class Error (Mode):
         by other handlers """
 
     def range (self):
-        return self.range (Cube.SECTORS_PER_CUBE)
+        return range (Cube.SECTORS_PER_CUBE)
