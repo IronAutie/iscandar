@@ -7,11 +7,12 @@ class Mode:
         self.x = 0  # for breakpoints
         return 0
 
-    @property
+
     def inclusive  (self, a, b):
         """The integers a through b, both ends included."""
 
         return range (a, b + 1)
+
 
     @property
     def range (self):
