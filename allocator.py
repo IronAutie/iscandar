@@ -3,6 +3,9 @@ from Cube     import Cube
 from Mode     import Mode
 from array    import array
 
+from Error    import Error
+from Nothing  import Nothing
+
 
 
 """
@@ -15,27 +18,7 @@ Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails 
 """
 
 
-
-class Error (Mode):
-    """ fill decision table with error handler in case'
-        there are any table entries missing from fill
-        by other handlers """
-
-    def range (self):
-        return self.inclusive (0, Cube.SECTORS_PER_CUBE)
-
-
-class Nothing (Mode):
-    pass
-
-
-
 class Modes (dict):
-
-
-    def nothing    (self, request):
-        return 0
-
 
     def nano       (self, request):
         return 0
@@ -64,10 +47,11 @@ class Modes (dict):
     def __init__   (self):
         """ create decision table here """
 
-        super().__init__({L: self.error  
-  
-        
-        self [0] = self.nothing 
+        self.error   = Error ()
+        self.nothing = Nothing ()
+
+        super().__init__({L: self.error   for L in self.range ()})
+        super().__init__({L: self.nothing for L in self.range ()})
 
         super().__init__({L: self.nano    
           for L in self.inclusive (1, Geometry.SECTORS_PER_BYTE)})

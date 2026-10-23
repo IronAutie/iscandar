@@ -16,3 +16,4 @@ class Mode:
     @property
     def range (self):
         return range (0, 0)
+
