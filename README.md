@@ -23,6 +23,9 @@ books, so an imperfect oracle costs placements, never consistency.
   specified in Appendix D of the paper. (The paper's APL oracle access
   files are being replaced with Python equivalents; the `.bin` layouts
   are unchanged.)
+- `oracle/creators/src/` — the oracle creators' home, independent of
+  the engine code: the paper's three generator listings plus the
+  production creator, with a README saying which is which.
 - `notes/` — design and manufacture notes, including the oracle
   manufacture desk-check brief and the draft literature/independence
   notes.
