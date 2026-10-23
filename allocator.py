@@ -66,7 +66,7 @@ Huge: A² < L < A³ — across planes, on the global row manifold
 Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails here
 """
 
-
+ 
 class Mode:
     "associate range of request, with a function to service it"
 
