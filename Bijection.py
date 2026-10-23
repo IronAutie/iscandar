@@ -14,6 +14,7 @@ class Bijection:
         return Coordinate (sector=sector, row=row, plane=plane)
 
     def to_displacement (self, coordinate):
-        return (coordinate.plane * self.A + coordinate.row)
-                * self.A + coordinate.sector
+        return ((coordinate.plane * self.A + coordinate.row)
+        * self.A + coordinate.sector)
+
 
