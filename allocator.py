@@ -1,5 +1,6 @@
 from Geometry import Geometry
 from Cube     import Cube
+from Mode     import Mode
 from array    import array
 
 
@@ -13,18 +14,24 @@ Huge: A² < L < A³ — across planes, on the global row manifold
 Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails here
 """
 
- 
 
 
+class Error (mode):
+    """ fill decision table with error handler in case'
+        there are any table entries missing from fill
+        by other handlers """
+
+    @property
+    def range (self):
+        for L in self.inclusive (0, Cube.SECTORS_PER_CUBE)})
+
+
+class Nothing (Mode):
+    pass
 
 
 
 class Modes (dict):
-
-
-
-
-
 
 
     def nothing    (self, request):
@@ -59,7 +66,7 @@ class Modes (dict):
         """ create decision table here """
 
         super().__init__({L: self.error  
-          for L in self.inclusive (0, Cube.SECTORS_PER_CUBE)})
+  
         
         self [0] = self.nothing 
 
