@@ -68,7 +68,8 @@ Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails 
 
 
 class Mode:
-    
+    "associate range of request, with a function to service it"
+
     def __call__ (self, request):
         "must override, should never be called bare!"
 
