@@ -58,32 +58,53 @@ class Cube(dict):
 
 class Modes (dict):
 
-    def nothing    (self):
+    def inclusive  (self, a, b):
+        """The integers a through b, both ends included."""
+
+        return range (a, b + 1)
+
+
+    def error      (self, request):
+        "should never be called!"
+
+        self.x = 0  # for breakpoints
         return 0
 
-    def nano       (self):
+
+    def nothing    (self, request):
         return 0
 
-    def tiny       (self):
+
+    def nano       (self, request):
         return 0
 
-    def small      (self):
+
+    def tiny       (self, request):
         return 0
+
+
+    def small      (self, request):
+        return 0
+
 
     def large      (self):
         return 0
 
-    def huge       (self):
+
+    def huge       (self, request):
         return 0
 
-    def cube       (self):
+
+    def cube       (self, request):
         return 0
+
 
     def __init__   (self):
         """ create decision table here """
 
-        super().__init__({L: self.nothing for L in range(0, 0)})
-        super().__init__({L: self.nano    for L in range(1, 4)})
+        super().__init__({L: self.error   for L in self.inclusive (0, Cube.SECTORS_PER_CUBE)})
+        self [0] = self.nothing 
+        super().__init__({L: self.nano    for L in self.inclusive (1, Geometry.ARITY // 4)})
 
 
     def __call__   (self, request):
