@@ -10,7 +10,7 @@ class Large (Mode):
     def range    (self):
         "reveal at which this __call__ is invoked"
 
-        return self.inclusive (Row.SECTORS_TWEEN_ROWS,
+        return self.inclusive (Row.SECTORS_TWEEN_ROWS + 1
                                Plane.SECTORS_PER_PLANE)
 
     def __call__ (self, request):

@@ -9,7 +9,7 @@ class Nano (Mode):
         "reveal at which this __call__ is invoked"
 
         return self.inclusive (Geometry.SECTORS_PER_BYTE,
-                               Row.SECTORS_PER_ROW)})
+                               Row.SECTORS_PER_ROW)
 
     def __call__ (self, request):
         return 0

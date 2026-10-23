@@ -3,7 +3,7 @@ from Cube import Cube
 
 
 
-def CubeCheck (Mode):
+class CubeCheck (Mode):
 
     "silent mode when bounds exceeded in cube"
 
