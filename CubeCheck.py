@@ -11,8 +11,8 @@ class CubeCheck (Mode):
     def range    (self):
         "reveal at which this __call__ is invoked"
         
-        return self.inclusive (Cube.SECTORS_PER_CUBE,
-                               Cube.SECTORS_PER_CUBE)
+        return self.inclusive (Cube.SECTORS_PER_CUBE - 1,
+                               Cube.SECTORS_PER_CUBE - 1)
 
     def __call__ (self, request):
         return 0

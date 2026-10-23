@@ -43,5 +43,5 @@ class Modes (dict):
                                                             
 
     def __call__   (self, request):
-        return self.get (request, nothing) (request)
+        return self.get (request, self.nothing) (request)
 
