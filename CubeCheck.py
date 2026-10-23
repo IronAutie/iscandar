@@ -1,0 +1,19 @@
+from Mode import Mode
+from Cube import Cube
+
+
+
+def CubeCheck (Mode):
+
+    "silent mode when bounds exceeded in cube"
+
+
+    def range    (self):
+        "reveal at which this __call__ is invoked"
+        
+        return self.inclusive (Cube.SECTORS_PER_CUBE,
+                               Cube.SECTORS_PER_CUBE)
+
+    def __call__ (self, request):
+        return 0
+      
