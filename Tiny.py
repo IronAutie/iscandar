@@ -1,4 +1,5 @@
 from Geometry import Geometry    
+from Row      import Row
 from Mode     import Mode
 
 
