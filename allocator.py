@@ -5,14 +5,7 @@ from array    import array
 
 
 
-"""
-Nano: L ≤ A/4 — Center Oracle, single-pass
-Tiny: A/4 < L ≤ A — Left Oracle, then Right, dual-pass
-Small: A < L ≤ 2A — sector-join across a row boundary
-Large: 2A < L ≤ A² — row sequences welded within one plane
-Huge: A² < L < A³ — across planes, on the global row manifold
-CubeCheck A³ exactly — the gatekeeper tier; anything inadmissible fast-fails here
-"""
+
 from Error    import Error
 from Nothing  import Nothing
 from Nano     import Nano
@@ -25,6 +18,14 @@ from CubeCheck import CubeCheck
 
 
 class Modes (dict):
+    """
+    Nano: L ≤ A/4 — Center Oracle, single-pass
+    Tiny: A/4 < L ≤ A — Left Oracle, then Right, dual-pass
+    Small: A < L ≤ 2A — sector-join across a row boundary
+    Large: 2A < L ≤ A² — row sequences welded within one plane
+    Huge: A² < L < A³ — across planes, on the global row manifold
+    CubeCheck A³ exactly — the gatekeeper tier; anything inadmissible fast-fails here
+    """
 
     def __init__   (self):
         """ create decision table here """
