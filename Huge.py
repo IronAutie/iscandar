@@ -11,8 +11,8 @@ class Huge (Mode):
     def range    (self):
         "reveal at which this __call__ is invoked"
 
-        for L in self.range (Plane.SECTORS_PER_PLANE,
-                             Cube.SECTORS_PER_CUBE)
+        return range (Plane.SECTORS_PER_PLANE,
+                      Cube.SECTORS_PER_CUBE)
 
     def __call__ (self, request):
         return 0

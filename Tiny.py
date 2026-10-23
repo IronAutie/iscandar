@@ -2,7 +2,7 @@ from Geometry import Geometry
 from Mode     import Mode
 
 
-class Nano (Mode):
+class Tiny (Mode):
     "handles request inside row"
 
     def range    (self):
