@@ -28,4 +28,4 @@ class Coordinate:
         return hash((self.sector, self.row, self.plane))
 
     def __repr__(self):
-        return f"Address(sector={self.sector}, row={self.row}, plane={self.plane})"
+        return f"Coordinate(sector={self.sector}, row={self.row}, plane={self.plane})"
