@@ -53,6 +53,14 @@ ROWS = 1 << 32
 FAIL = 255
 
 
+# Default home of the tables: the author's pinned O: drive on Windows
+# (the letter is pinned in Disk Management so it cannot drift). On other
+# platforms the tables default to this script's own folder.
+# --outdir always overrides.
+DEFAULT_OUTDIR = (r"O:\oracle" if os.name == "nt"
+                  else os.path.dirname(os.path.abspath(__file__)))
+
+
 # --------------------------------------------------------------------------
 # Vectorised chunk builders (S is a uint32 numpy array of consecutive states)
 # --------------------------------------------------------------------------
@@ -233,7 +241,7 @@ def selftest(outdir):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("which", choices=["center", "left", "right", "all", "selftest"])
-    ap.add_argument("--outdir", default=os.path.dirname(os.path.abspath(__file__)))
+    ap.add_argument("--outdir", default=DEFAULT_OUTDIR)
     ap.add_argument("--rows", type=int, default=ROWS,
                     help="rows to write (default: full 2^32; smaller only for tests)")
     ap.add_argument("--chunk", type=int, default=1 << 21)

@@ -26,6 +26,7 @@ spot-check states without writing anything.
 """
 
 import argparse
+import os
 import sys
 
 STATES = 1 << 32          # one row per 32-bit occupancy state
@@ -82,8 +83,8 @@ def manufacture(out_path, start, count):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", default="OracleRight.bin",
-                    help="output file (default: OracleRight.bin)")
+    ap.add_argument("--out", default=(os.path.join(r"O:\oracle", "OracleRight.bin") if os.name == "nt" else "OracleRight.bin"),
+                    help="output file (default: the pinned O: oracle folder on Windows)")
     ap.add_argument("--start", type=int, default=0,
                     help="first state to write (default: 0)")
     ap.add_argument("--states", type=int, default=STATES,
@@ -98,6 +99,7 @@ def main(argv=None):
     if not (0 <= args.start and 0 < args.states
             and args.start + args.states <= STATES):
         ap.error("require 0 <= start, 0 < states, start + states <= 2^32")
+    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     manufacture(args.out, args.start, args.states)
     return 0
 

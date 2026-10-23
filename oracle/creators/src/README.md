@@ -34,6 +34,13 @@ python3 create_oracles.py all --outdir <dir>
 python3 create_oracles.py selftest --outdir <dir>
 ```
 
+On the author's Windows machine the default output folder is hardwired
+to `O:\oracle` — the external drive whose letter is pinned to O: in
+Disk Management so it cannot drift — for the production creator and
+for the three listings alike. `--outdir` / `--out` still override it,
+and on other platforms the default is the script's own folder (creator)
+or the current folder (listings).
+
 Open author's-call items, recorded as desk-check questions in
 `notes/oracle-manufacture-notes.md`: the Left/Right naming cross in the
 paper's listings (Listing 6 "Left" computes the run ending at the right
