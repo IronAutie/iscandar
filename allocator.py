@@ -56,13 +56,43 @@ class Cube(dict):
 
 
 
-class Engine(Cube):
+class Modes (__dict__):
+
+    def nothing    (self):
+        return 0
+
+    def tiny       (self):
+        return 0
+
+    def small      (self):
+        return 0
+
+    def large      (self):
+        return 0
+
+    def huge       (self):
+        return 0
+
+    def cube       (self):
+        return 0
+
+    def __init__   (self):
+        """ create decision table here """
+
+    def __call__   (self, request):
+        return self.get (request, nothing) (request)
+
+        
+
+class Engine (Cube, Modes):
 
     def __init__ (self):
         """ initialize a Cube """
         self.count_overall = 0
         self.count_planes  = array('I', [0] * Cube.PLANES_PER_CUBE) 
         self.count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
+
+
 
 
     def __call__ (self, address = 0):
