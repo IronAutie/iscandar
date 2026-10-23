@@ -16,12 +16,11 @@ Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails 
 
 
 
-class Error (mode):
+class Error (Mode):
     """ fill decision table with error handler in case'
         there are any table entries missing from fill
         by other handlers """
 
-    @property
     def range (self):
         for L in self.inclusive (0, Cube.SECTORS_PER_CUBE)})
 
