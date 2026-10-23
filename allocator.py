@@ -1,5 +1,3 @@
-
-
 class Geometry:
     """ Shape of the system from paper """
     ARITY      = 32
@@ -17,6 +15,7 @@ class Row(int):
         return super().__new__(cls, value & cls.MASK)
 
 
+
 class Plane(dict):
     """ARITY Rows, keyed by row index."""
 
@@ -25,4 +24,20 @@ class Plane(dict):
 
     def __missing__(self, i):
         return Row()
+
+    def __setitem__(self, i, value):
+        super().__setitem__(i, Row(value))
+
+
+
+class Cube(dict):
+    """ARITY Planes, keyed by plane index."""
+
+    def __init__(self):
+        super().__init__((i, Plane()) for i in range(Geometry.ARITY))
+
+    def __missing__(self, i):
+        plane = Plane()
+        self[i] = plane
+        return plane
 
