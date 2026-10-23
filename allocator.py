@@ -66,19 +66,34 @@ Huge: A² < L < A³ — across planes, on the global row manifold
 Cube: L = A³ exactly — the gatekeeper tier; anything inadmissible fast-fails here
 """
 
-class Modes (dict):
 
+class Mode:
+    
+    def __call__ (self, request):
+        "must override, should never be called bare!"
+
+        self.x = 0  # for breakpoints
+        return 0
+
+    @property
     def inclusive  (self, a, b):
         """The integers a through b, both ends included."""
 
         return range (a, b + 1)
 
+    @property
+    def range (self):
+        return range (0, 0)
 
-    def error      (self, request):
-        "should never be called!"
 
-        self.x = 0  # for breakpoints
-        return 0
+
+
+class Modes (dict):
+
+
+
+
+
 
 
     def nothing    (self, request):
