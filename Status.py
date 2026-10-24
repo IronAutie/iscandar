@@ -15,6 +15,16 @@ class Status:
     NANO_FAIL = 2
     KEYRANGE  = 3  # index/key out of range (views raise IndexError;
                    # the engine boundary converts it to this status)
+    FAIL_OVERLAY = 4  # check-then-set failure on the commit path: a
+                      # mark landing on occupied bits (or an unmark
+                      # clearing clear ones) -- a misdesign, never
+                      # tolerated silently
+    FAIL_GAMMA_ROW = 5  # Gamma ladder: a row counter disagrees with
+                        # the popcount of its row word
+    FAIL_GAMMA_PLANE = 6  # Gamma ladder: a plane counter disagrees
+                          # with the sum of its row counters
+    FAIL_GAMMA_OVERALL = 7  # Gamma ladder: the overall counter
+                            # disagrees with the sum of plane counters
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; same numbering shape, separate names, so

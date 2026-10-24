@@ -1,4 +1,5 @@
-# Gears.py -- the Python side of the C gears (RowsCheck.c + PlanesCheck.c).
+# Gears.py -- the Python side of the C gears (RowsCheck.c +
+# PlanesCheck.c, and Mark.c + Unmark.c for the commit path).
 # Build the DLL once, in the engine folder, with both C files together:
 #     cl /LD RowsCheck.c PlanesCheck.c
 # which produces RowsCheck.dll holding both gears. Importing this module
@@ -69,3 +70,27 @@ def scan (count_planes, count_rows, request, bullet_cb):
                               ctypes.byref (sector), ctypes.byref (row),
                               ctypes.byref (plane))
     return status, plane.value, row.value, sector.value
+
+lib.mark_sectors.argtypes = [ctypes.POINTER (ctypes.c_uint32),
+                             ctypes.POINTER (ctypes.c_uint32),
+                             ctypes.POINTER (ctypes.c_uint32),
+                             ctypes.c_uint32, ctypes.c_uint32]
+lib.mark_sectors.restype = ctypes.c_int32
+lib.unmark_sectors.argtypes = [ctypes.POINTER (ctypes.c_uint32),
+                               ctypes.POINTER (ctypes.c_uint32),
+                               ctypes.POINTER (ctypes.c_uint32),
+                               ctypes.c_uint32, ctypes.c_uint32]
+lib.unmark_sectors.restype = ctypes.c_int32
+
+
+def mark_sectors (sectors, count_rows, count_planes, start, count):
+    """ Mark a block through the C marker (Mark.c). Returns the
+    C status; the caller owns the overall counter. """
+    return lib.mark_sectors (_u32 (sectors), _u32 (count_rows),
+                             _u32 (count_planes), start, count)
+
+
+def unmark_sectors (sectors, count_rows, count_planes, start, count):
+    """ Unmark a block through the C unmarker (Unmark.c). """
+    return lib.unmark_sectors (_u32 (sectors), _u32 (count_rows),
+                               _u32 (count_planes), start, count)
