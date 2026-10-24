@@ -6,6 +6,7 @@
 
 #define GEAR_SUCCESS 0
 #define GEAR_FAIL    1
+#define GEAR_EXHAUST 2
 
 #define ROWS_PER_PLANE   32u
 #define SECTORS_PER_ROW  32u
@@ -37,29 +38,24 @@ __declspec(dllexport) int32_t rows_gear (
 {
     uint32_t row;
     uint32_t base;
+    uint32_t at;
+
     uint32_t remaining;
     int32_t  status;
 
     if (handler_callback == 0)
         return GEAR_FAIL;
 
-    base = plane * ROWS_PER_PLANE;
+    base      = plane * ROWS_PER_PLANE;
 
-    for (row = 0; row < ROWS_PER_PLANE; row++)
-    {
-        remaining = SECTORS_PER_ROW - count_rows [base + row];
-        if (request <= remaining)
-        {
-            status = handler_callback (plane, row, request,
-                                       handler_ctx, sector_out);
-            if (status == GEAR_SUCCESS)
-            {
-                *row_out = row;
-                return GEAR_SUCCESS;
-            }
-            /* acquittal: the gearing survives, the procession resumes */
-        }
-    }
+row_00:
+    row       = 0;
+    at        = base + row;
+    remaining = SECTORS_PER_ROW - count_rows [at];
+    if (request > remaining) return GEAR_FAIL;
+   *row_out   = row;
+    return GEAR_SUCCESS;
 
-    return GEAR_FAIL;
+    
+return GEAR_EXHAUST;
 }
