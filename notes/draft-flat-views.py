@@ -6,9 +6,9 @@ versions, but the state is one flat array('I', 1024) of row words.
 That array is what C gets a pointer to; the dict classes become
 views over it, not a second copy.
 
-Filed in the repo's notes at the author's word (2026-10-24); the
-engine's own Cube.py, Plane.py and Row.py are still untouched
-until the author says to install this.
+Installed into Cube.py/Plane.py/Row.py at the author's word
+(2026-10-24); this file remains as the design record and
+self-test. Row.py needed no change: it already matched the draft.
 
 The ONE deliberate behavior change, flagged for the author:
 the old dicts silently accepted out-of-range keys (a read of a

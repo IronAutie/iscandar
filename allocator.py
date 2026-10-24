@@ -14,6 +14,8 @@ class Engine (Cube):
     def __init__ (self):
         """ initialize a Cube """
 
+        super().__init__()  # allocate the flat sectors store
+
         self.count_overall = 0
         self.count_planes  = array('I', [0] * Cube.PLANES_PER_CUBE) 
         self.count_rows    = array('I', [0] * Cube.ROWS_PER_CUBE) 
