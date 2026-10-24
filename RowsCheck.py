@@ -84,38 +84,38 @@ class RowsCheck:
 
     def vector1 (self, plane, request, handler):
 
-        vector1 = [None] * 32
-        vector1 [ 0] = True if request <= remaining_in_row ( 0) else None
-        vector1 [ 1] = True if request <= remaining_in_row ( 1) else None
-        vector1 [ 2] = True if request <= remaining_in_row ( 2) else None
-        vector1 [ 3] = True if request <= remaining_in_row ( 3) else None
-        vector1 [ 4] = True if request <= remaining_in_row ( 4) else None
-        vector1 [ 5] = True if request <= remaining_in_row ( 5) else None
-        vector1 [ 6] = True if request <= remaining_in_row ( 6) else None
-        vector1 [ 7] = True if request <= remaining_in_row ( 7) else None
-        vector1 [ 8] = True if request <= remaining_in_row ( 8) else None
-        vector1 [ 9] = True if request <= remaining_in_row ( 9) else None
-        vector1 [10] = True if request <= remaining_in_row (10) else None
-        vector1 [11] = True if request <= remaining_in_row (11) else None
-        vector1 [12] = True if request <= remaining_in_row (12) else None
-        vector1 [13] = True if request <= remaining_in_row (13) else None
-        vector1 [14] = True if request <= remaining_in_row (14) else None
-        vector1 [15] = True if request <= remaining_in_row (15) else None
-        vector1 [16] = True if request <= remaining_in_row (16) else None
-        vector1 [17] = True if request <= remaining_in_row (17) else None
-        vector1 [18] = True if request <= remaining_in_row (18) else None
-        vector1 [19] = True if request <= remaining_in_row (19) else None
-        vector1 [20] = True if request <= remaining_in_row (20) else None
-        vector1 [21] = True if request <= remaining_in_row (21) else None
-        vector1 [22] = True if request <= remaining_in_row (22) else None
-        vector1 [23] = True if request <= remaining_in_row (23) else None
-        vector1 [24] = True if request <= remaining_in_row (24) else None
-        vector1 [25] = True if request <= remaining_in_row (25) else None
-        vector1 [26] = True if request <= remaining_in_row (26) else None
-        vector1 [27] = True if request <= remaining_in_row (27) else None
-        vector1 [28] = True if request <= remaining_in_row (28) else None
-        vector1 [29] = True if request <= remaining_in_row (29) else None
-        vector1 [30] = True if request <= remaining_in_row (30) else None
-        vector1 [31] = True if request <= remaining_in_row (31) else None
-        return vector1
+        result = [None] * 32
+        result [ 0] = True if request <= remaining_in_row (plane,  0) else None
+        result [ 1] = True if request <= remaining_in_row (plane,  1) else None
+        result [ 2] = True if request <= remaining_in_row (plane,  2) else None
+        result [ 3] = True if request <= remaining_in_row (plane,  3) else None
+        result [ 4] = True if request <= remaining_in_row (plane,  4) else None
+        result [ 5] = True if request <= remaining_in_row (plane,  5) else None
+        result [ 6] = True if request <= remaining_in_row (plane,  6) else None
+        result [ 7] = True if request <= remaining_in_row (plane,  7) else None
+        result [ 8] = True if request <= remaining_in_row (plane,  8) else None
+        result [ 9] = True if request <= remaining_in_row (plane,  9) else None
+        result [10] = True if request <= remaining_in_row (plane, 10) else None
+        result [11] = True if request <= remaining_in_row (plane, 11) else None
+        result [12] = True if request <= remaining_in_row (plane, 12) else None
+        result [13] = True if request <= remaining_in_row (plane, 13) else None
+        result [14] = True if request <= remaining_in_row (plane, 14) else None
+        result [15] = True if request <= remaining_in_row (plane, 15) else None
+        result [16] = True if request <= remaining_in_row (plane, 16) else None
+        result [17] = True if request <= remaining_in_row (plane, 17) else None
+        result [18] = True if request <= remaining_in_row (plane, 18) else None
+        result [19] = True if request <= remaining_in_row (plane, 19) else None
+        result [20] = True if request <= remaining_in_row (plane, 20) else None
+        result [21] = True if request <= remaining_in_row (plane, 21) else None
+        result [22] = True if request <= remaining_in_row (plane, 22) else None
+        result [23] = True if request <= remaining_in_row (plane, 23) else None
+        result [24] = True if request <= remaining_in_row (plane, 24) else None
+        result [25] = True if request <= remaining_in_row (plane, 25) else None
+        result [26] = True if request <= remaining_in_row (plane, 26) else None
+        result [27] = True if request <= remaining_in_row (plane, 27) else None
+        result [28] = True if request <= remaining_in_row (plane, 28) else None
+        result [29] = True if request <= remaining_in_row (plane, 29) else None
+        result [30] = True if request <= remaining_in_row (plane, 30) else None
+        result [31] = True if request <= remaining_in_row (plane, 31) else None
+        return result
 
