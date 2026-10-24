@@ -54,7 +54,7 @@ class PlanesCheck:
         'apply row_handler to any qualifying plane'
 
         result = [None] * 32
-        result [ 0] = row_handler (item_handler, plane,  0, request) if vector1 [ 0] is not None else None
+        result [ 0] = row_handler (plane, request, item_handler) if vector1 [ 0] is not None else None
         result [ 1] = row_handler (item_handler, plane,  1, request) if vector1 [ 1] is not None else None
         result [ 2] = row_handler (item_handler, plane,  2, request) if vector1 [ 2] is not None else None
         result [ 3] = row_handler (item_handler, plane,  3, request) if vector1 [ 3] is not None else None
