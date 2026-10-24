@@ -27,10 +27,11 @@ class Status:
                             # disagrees with the sum of plane counters
 
     """Gear statuses (used across the C boundary by Gears.py and
-    the gears themselves; same numbering shape, separate names, so
-    a gear outcome can never be mistaken for a mode outcome):
+    the gears themselves; separate names, and a nonzero success,
+    so a gear outcome can never be mistaken for a mode outcome,
+    not even numerically):
     """
 
-    GEAR_SUCCESS = 0
+    GEAR_SUCCESS = 8
     GEAR_FAIL    = 1
     GEAR_EXHAUST = 2
