@@ -6,9 +6,45 @@ class RowsCheck:
 
     "Examine each row in plane with enough requested sectors"
 
+    def vector3 (self, vector2):
+
+        if isinstance (vector2 [ 0], Coordinate): return vector2 [ 0]
+        if isinstance (vector2 [ 1], Coordinate): return vector2 [ 1]
+        if isinstance (vector2 [ 2], Coordinate): return vector2 [ 2]
+        if isinstance (vector2 [ 3], Coordinate): return vector2 [ 3]
+        if isinstance (vector2 [ 4], Coordinate): return vector2 [ 4]
+        if isinstance (vector2 [ 5], Coordinate): return vector2 [ 5]
+        if isinstance (vector2 [ 6], Coordinate): return vector2 [ 6]
+        if isinstance (vector2 [ 7], Coordinate): return vector2 [ 7]
+        if isinstance (vector2 [ 8], Coordinate): return vector2 [ 8]
+        if isinstance (vector2 [ 9], Coordinate): return vector2 [ 9]
+        if isinstance (vector2 [10], Coordinate): return vector2 [10]
+        if isinstance (vector2 [11], Coordinate): return vector2 [11]
+        if isinstance (vector2 [12], Coordinate): return vector2 [12]
+        if isinstance (vector2 [13], Coordinate): return vector2 [13]
+        if isinstance (vector2 [14], Coordinate): return vector2 [14]
+        if isinstance (vector2 [15], Coordinate): return vector2 [15]
+        if isinstance (vector2 [16], Coordinate): return vector2 [16]
+        if isinstance (vector2 [17], Coordinate): return vector2 [17]
+        if isinstance (vector2 [18], Coordinate): return vector2 [18]
+        if isinstance (vector2 [19], Coordinate): return vector2 [19]
+        if isinstance (vector2 [20], Coordinate): return vector2 [20]
+        if isinstance (vector2 [21], Coordinate): return vector2 [21]
+        if isinstance (vector2 [22], Coordinate): return vector2 [22]
+        if isinstance (vector2 [23], Coordinate): return vector2 [23]
+        if isinstance (vector2 [24], Coordinate): return vector2 [24]
+        if isinstance (vector2 [25], Coordinate): return vector2 [25]
+        if isinstance (vector2 [26], Coordinate): return vector2 [26]
+        if isinstance (vector2 [27], Coordinate): return vector2 [27]
+        if isinstance (vector2 [28], Coordinate): return vector2 [28]
+        if isinstance (vector2 [29], Coordinate): return vector2 [29]
+        if isinstance (vector2 [30], Coordinate): return vector2 [30]
+        if isinstance (vector2 [31], Coordinate): return vector2 [31]
+        return next ((lane for lane in vector2 if lane is not None), None)
 
 
     def vector2 (self, plane, request, handler, vector1):
+
         result = [None] * 32
         result [ 0] = handler (plane,  0, request) if vector1 [ 0] is not None else None
         result [ 1] = handler (plane,  1, request) if vector1 [ 1] is not None else None
@@ -46,7 +82,7 @@ class RowsCheck:
 
 
 
-    def vector0 (self, plane, request, handler):
+    def vector1 (self, plane, request, handler):
 
         vector1 = [None] * 32
         vector1 [ 0] = True if request <= remaining_in_row ( 0) else None
