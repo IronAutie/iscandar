@@ -1,6 +1,8 @@
-/* RowsCheck.c -- rows gear: counter gate, bullet trial, first conviction up.
-   The gear is mode-neutral: it knows counters and lanes, never tables.
-   Mode knowledge lives in the bullet, bound once through rows_gear_bind. */
+/* PlanesCheck.c -- planes gear: counter gate, row trial, first conviction up.
+   The planes gear is mode-neutral, like the rows gear beneath it: it knows
+   counters and lanes, never tables. Two handlers travel down the chain:
+   the row handler is fired once per qualifying plane, and the item handler
+   (the bullet) is passed through the row handler to the rows gear. */
 
 #include <stdint.h>
 
@@ -8,364 +10,368 @@
 #define GEAR_FAIL    1
 #define GEAR_EXHAUST 2
 
-#define ROWS_PER_PLANE   32u
-#define SECTORS_PER_ROW  32u
+#define PLANES_PER_CUBE    32u
+#define SECTORS_PER_PLANE  1024u
 
 /* The bullet: a mode's trial. Returns GEAR_SUCCESS with *sector_out set
    on conviction, or the mode's own failure code on acquittal. */
 typedef int32_t (*bullet_fn) (uint32_t plane, uint32_t row, uint32_t request,
                               void *ctx, uint32_t *sector_out);
 
-/* The gearing's surviving state: the seated handler and its context. */
-static bullet_fn handler_callback = 0;
-static void     *handler_ctx      = 0;
+/* The row handler: fired at one plane; it receives the item handler to
+   pass down to the rows gear, exactly as in the Python composition. */
+typedef int32_t (*row_handler_fn) (const uint32_t *count_rows,
+                                   uint32_t plane, uint32_t request,
+                                   bullet_fn item_handler, void *ctx,
+                                   uint32_t *sector_out, uint32_t *row_out);
 
-__declspec(dllexport) int32_t gear_abi_version (void)
-{
-    return 1;
-}
+/* The rows gear, living in RowsCheck.c: its bullet arrives by bind. */
+extern void    rows_gear_bind (bullet_fn bullet, void *ctx);
+extern int32_t rows_gear (const uint32_t *count_rows,
+                          uint32_t plane, uint32_t request,
+                          uint32_t *sector_out, uint32_t *row_out);
 
-__declspec(dllexport) void rows_gear_bind (bullet_fn bullet, void *ctx)
-{
-    handler_callback = bullet;
-    handler_ctx      = ctx;
-}
-
-__declspec(dllexport) int32_t rows_gear (
+/* The adapter: seats the item handler it was handed in the rows gear,
+   then fires the rows gear at this plane. Exported so the Python side
+   can name it wherever a row_handler_fn is wanted. */
+__declspec(dllexport) int32_t rows_row_handler (
     const uint32_t *count_rows,
     uint32_t plane, uint32_t request,
+    bullet_fn item_handler, void *ctx,
     uint32_t *sector_out, uint32_t *row_out)
 {
-    uint32_t row;
-    uint32_t base;
-    uint32_t at;
+    rows_gear_bind (item_handler, ctx);
+    return rows_gear (count_rows, plane, request, sector_out, row_out);
+}
 
+__declspec(dllexport) int32_t planes_gear (
+    const uint32_t *count_planes, const uint32_t *count_rows,
+    uint32_t request,
+    row_handler_fn row_handler, bullet_fn item_handler, void *ctx,
+    uint32_t *sector_out, uint32_t *row_out, uint32_t *plane_out)
+{
+    uint32_t plane;
     uint32_t remaining;
     int32_t  status;
 
-    if (handler_callback == 0)
-        return GEAR_FAIL;
-
-    base      = plane * ROWS_PER_PLANE;
-
-row_00:
-    row       = 0;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_01;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_01;
-    *row_out = row;
+plane_00:
+    plane     = 0;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_01;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_01;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_01:
-    row       = 1;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_02;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_02;
-    *row_out = row;
+plane_01:
+    plane     = 1;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_02;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_02;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_02:
-    row       = 2;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_03;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_03;
-    *row_out = row;
+plane_02:
+    plane     = 2;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_03;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_03;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_03:
-    row       = 3;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_04;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_04;
-    *row_out = row;
+plane_03:
+    plane     = 3;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_04;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_04;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_04:
-    row       = 4;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_05;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_05;
-    *row_out = row;
+plane_04:
+    plane     = 4;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_05;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_05;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_05:
-    row       = 5;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_06;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_06;
-    *row_out = row;
+plane_05:
+    plane     = 5;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_06;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_06;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_06:
-    row       = 6;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_07;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_07;
-    *row_out = row;
+plane_06:
+    plane     = 6;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_07;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_07;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_07:
-    row       = 7;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_08;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_08;
-    *row_out = row;
+plane_07:
+    plane     = 7;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_08;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_08;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_08:
-    row       = 8;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_09;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_09;
-    *row_out = row;
+plane_08:
+    plane     = 8;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_09;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_09;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_09:
-    row       = 9;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_10;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_10;
-    *row_out = row;
+plane_09:
+    plane     = 9;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_10;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_10;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_10:
-    row       = 10;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_11;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_11;
-    *row_out = row;
+plane_10:
+    plane     = 10;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_11;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_11;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_11:
-    row       = 11;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_12;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_12;
-    *row_out = row;
+plane_11:
+    plane     = 11;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_12;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_12;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_12:
-    row       = 12;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_13;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_13;
-    *row_out = row;
+plane_12:
+    plane     = 12;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_13;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_13;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_13:
-    row       = 13;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_14;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_14;
-    *row_out = row;
+plane_13:
+    plane     = 13;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_14;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_14;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_14:
-    row       = 14;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_15;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_15;
-    *row_out = row;
+plane_14:
+    plane     = 14;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_15;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_15;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_15:
-    row       = 15;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_16;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_16;
-    *row_out = row;
+plane_15:
+    plane     = 15;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_16;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_16;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_16:
-    row       = 16;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_17;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_17;
-    *row_out = row;
+plane_16:
+    plane     = 16;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_17;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_17;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_17:
-    row       = 17;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_18;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_18;
-    *row_out = row;
+plane_17:
+    plane     = 17;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_18;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_18;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_18:
-    row       = 18;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_19;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_19;
-    *row_out = row;
+plane_18:
+    plane     = 18;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_19;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_19;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_19:
-    row       = 19;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_20;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_20;
-    *row_out = row;
+plane_19:
+    plane     = 19;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_20;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_20;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_20:
-    row       = 20;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_21;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_21;
-    *row_out = row;
+plane_20:
+    plane     = 20;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_21;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_21;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_21:
-    row       = 21;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_22;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_22;
-    *row_out = row;
+plane_21:
+    plane     = 21;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_22;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_22;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_22:
-    row       = 22;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_23;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_23;
-    *row_out = row;
+plane_22:
+    plane     = 22;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_23;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_23;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_23:
-    row       = 23;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_24;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_24;
-    *row_out = row;
+plane_23:
+    plane     = 23;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_24;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_24;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_24:
-    row       = 24;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_25;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_25;
-    *row_out = row;
+plane_24:
+    plane     = 24;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_25;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_25;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_25:
-    row       = 25;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_26;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_26;
-    *row_out = row;
+plane_25:
+    plane     = 25;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_26;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_26;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_26:
-    row       = 26;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_27;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_27;
-    *row_out = row;
+plane_26:
+    plane     = 26;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_27;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_27;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_27:
-    row       = 27;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_28;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_28;
-    *row_out = row;
+plane_27:
+    plane     = 27;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_28;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_28;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_28:
-    row       = 28;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_29;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_29;
-    *row_out = row;
+plane_28:
+    plane     = 28;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_29;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_29;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_29:
-    row       = 29;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_30;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_30;
-    *row_out = row;
+plane_29:
+    plane     = 29;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_30;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_30;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_30:
-    row       = 30;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
-    if (request > remaining) goto row_31;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
-    if (status != GEAR_SUCCESS) goto row_31;
-    *row_out = row;
+plane_30:
+    plane     = 30;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
+    if (request > remaining) goto plane_31;
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
+    if (status != GEAR_SUCCESS) goto plane_31;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
-row_31:
-    row       = 31;
-    at        = base + row;
-    remaining = SECTORS_PER_ROW - count_rows [at];
+plane_31:
+    plane     = 31;
+    remaining = SECTORS_PER_PLANE - count_planes [plane];
     if (request > remaining) goto exhaust;
-    status = handler_callback (plane, row, request, handler_ctx, sector_out);
+    status = row_handler (count_rows, plane, request,
+                          item_handler, ctx, sector_out, row_out);
     if (status != GEAR_SUCCESS) goto exhaust;
-    *row_out = row;
+    *plane_out = plane;
     return GEAR_SUCCESS;
 
 exhaust:
