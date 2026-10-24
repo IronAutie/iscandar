@@ -13,6 +13,8 @@ class Status:
     SUCCESS   = 0
     FAIL      = 1
     NANO_FAIL = 2
+    KEYRANGE  = 3  # index/key out of range (views raise IndexError;
+                   # the engine boundary converts it to this status)
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; same numbering shape, separate names, so
