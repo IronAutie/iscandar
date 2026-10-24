@@ -5,10 +5,7 @@
    (the bullet) is passed through the row handler to the rows gear. */
 
 #include <stdint.h>
-
-#define GEAR_SUCCESS 0
-#define GEAR_FAIL    1
-#define GEAR_EXHAUST 2
+#include "status.h"
 
 #define PLANES_PER_CUBE    32u
 #define SECTORS_PER_PLANE  1024u

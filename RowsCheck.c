@@ -3,10 +3,7 @@
    Mode knowledge lives in the bullet, bound once through rows_gear_bind. */
 
 #include <stdint.h>
-
-#define GEAR_SUCCESS 0
-#define GEAR_FAIL    1
-#define GEAR_EXHAUST 2
+#include "status.h"
 
 #define ROWS_PER_PLANE   32u
 #define SECTORS_PER_ROW  32u

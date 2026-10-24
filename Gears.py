@@ -6,10 +6,15 @@
 
 import ctypes, os
 
+from Status import Status
+
 _here = os.path.dirname (os.path.abspath (__file__))
 lib   = ctypes.CDLL (os.path.join (_here, "RowsCheck.dll"))
 
-SUCCESS, FAIL, EXHAUST = 0, 1, 2
+# Status values come from Status.py, the canonical home -- never
+# hand-written here, so the Python side cannot drift from C.
+SUCCESS, FAIL, EXHAUST = (Status.GEAR_SUCCESS, Status.GEAR_FAIL,
+                            Status.GEAR_EXHAUST)
 
 BULLET_FN = ctypes.CFUNCTYPE (
     ctypes.c_int32,
