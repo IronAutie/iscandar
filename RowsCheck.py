@@ -40,7 +40,7 @@ class RowsCheck:
         if isinstance (vector2 [29], Coordinate): return vector2 [29]
         if isinstance (vector2 [30], Coordinate): return vector2 [30]
         if isinstance (vector2 [31], Coordinate): return vector2 [31]
-        return next ((lane for lane in vector2 if lane is not None), None)
+        return None
 
 
     def vector2 (self, plane, request, handler, vector1):
