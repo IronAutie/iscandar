@@ -1,4 +1,5 @@
-from Status import SUCCESS, FAIL
+from Status     import SUCCESS, FAIL
+from Coordinate import Coordinate
 
 
 
@@ -119,3 +120,4 @@ class RowsCheck:
         result [31] = True if request <= remaining_in_row (plane, 31) else None
         return result
 
+    
