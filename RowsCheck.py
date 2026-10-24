@@ -1,4 +1,4 @@
-from Status     import SUCCESS, FAIL
+from Status     import Status
 from Coordinate import Coordinate
 
 
@@ -11,6 +11,8 @@ class RowsCheck:
     """
 
     def vector3 (self, vector2):
+
+        'return first qualifying result'
 
         if isinstance (vector2 [ 0], Coordinate): return vector2 [ 0]
         if isinstance (vector2 [ 1], Coordinate): return vector2 [ 1]
@@ -44,10 +46,12 @@ class RowsCheck:
         if isinstance (vector2 [29], Coordinate): return vector2 [29]
         if isinstance (vector2 [30], Coordinate): return vector2 [30]
         if isinstance (vector2 [31], Coordinate): return vector2 [31]
-        return None
+        return Status.FAIL
 
 
     def vector2 (self, plane, request, handler, vector1):
+
+        'apply handler to any qualifying row'
 
         result = [None] * 32
         result [ 0] = handler (plane,  0, request) if vector1 [ 0] is not None else None
@@ -87,6 +91,8 @@ class RowsCheck:
 
     def vector1 (self, plane, request, handler):
 
+        'check lanes for sufficient room to fulfil request'
+
         result = [None] * 32
         result [ 0] = True if request <= remaining_in_row (plane,  0) else None
         result [ 1] = True if request <= remaining_in_row (plane,  1) else None
@@ -125,7 +131,6 @@ class RowsCheck:
 
     def __call__ (self, plane, request, handler):
 
-        return self.vector3 
-        (self.vector2 (plane, request, handler, 
-         self.vector1 (plane, request, handler)
-                      ))
+        result = self.vector1 (plane, request, handler) 
+        result = self.vector2 (plane, request, handler, result)
+        return   self.vector3 (result)
