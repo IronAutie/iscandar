@@ -5,7 +5,10 @@ from Coordinate import Coordinate
 
 class RowsCheck:
 
-    "Examine each row in plane with enough requested sectors"
+    """
+    Examine each row in plane with enough requested sectors.
+    This is done as a handcoded procession for determinism.
+    """
 
     def vector3 (self, vector2):
 
@@ -82,7 +85,6 @@ class RowsCheck:
         return result
 
 
-
     def vector1 (self, plane, request, handler):
 
         result = [None] * 32
@@ -120,4 +122,10 @@ class RowsCheck:
         result [31] = True if request <= remaining_in_row (plane, 31) else None
         return result
 
-    
+
+    def __call__ (self, plane, request, handler):
+
+        return self.vector3 
+        (self.vector2 (plane, request, handler, 
+         self.vector1 (plane, request, handler)
+                      ))
