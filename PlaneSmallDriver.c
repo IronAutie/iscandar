@@ -3,12 +3,20 @@
    The Small Resolution" of the academic paper titled "An Extension of
    Buddy Systems to Arbitrary Radix for Deterministic Memory Allocation",
    provided by author Andrew Jonathan Fine.
-   DRAFT, uncommitted, not yet wired into Gears.py or build_gears.bat. */
+   Wired into Gears.py (scan_small) and build_gears.bat.
+   Planes-pair gate, verbatim (user, 2026-10-25): a pair of
+   planes passes under Small iff plane n has at least 1 sector
+   free and plane n+1 has at least (request - 1) sectors free.
+   For plane 31, which has no next plane and whose row 31 cannot
+   anchor, a plane is tried only when free in plane 31 alone
+   reaches the request. Inside a tried plane, the pair gates in
+   pairs_row_handler do the finer work. */
 
 #include <stdint.h>
 #include "status.h"
 
 #define PLANES_PER_CUBE  32u
+#define SECTORS_PER_PLANE  1024u
 
 /* The bullet: a mode's pair trial. It receives the anchor as
    (plane, row), the request, its context, and sector_of_anchor. It
@@ -36,6 +44,7 @@ __declspec(dllexport) void planes_small_gear_bind (bullet_fn bullet, void *ctx)
 }
 
 __declspec(dllexport) int32_t planes_small_gear (
+    const uint32_t *count_planes,
     const uint32_t *count_rows,
     uint32_t request,
     uint32_t *sector_of_anchor, uint32_t *row_out, uint32_t *plane_out)
@@ -57,259 +66,546 @@ __declspec(dllexport) int32_t planes_small_gear (
         return GEAR_FAIL;
 
     plane = first;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+    /* Trial 0: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 1: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 2: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 3: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 4: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 5: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 6: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 7: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 8: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 9: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 10: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 11: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 12: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 13: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 14: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 15: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 16: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 17: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 18: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 19: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 20: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 21: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 22: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 23: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 24: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 25: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 26: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 27: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 28: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 29: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 30: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
     plane = plane + 1;
     if (plane >= PLANES_PER_CUBE)
         plane = 0;
-    status = pairs_row_handler (count_rows, plane, request,
-                                small_handler_callback,
-                                small_handler_ctx,
-                                sector_of_anchor, row_out);
-    if (status == GEAR_SUCCESS) goto convicted;
+
+    /* Trial 31: pair-plane gate, then pairs_row_handler. */
+    if (((plane == PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= request))
+            || ((plane != PLANES_PER_CUBE - 1)
+            && (SECTORS_PER_PLANE - count_planes[plane] >= 1)
+            && (SECTORS_PER_PLANE - count_planes[plane + 1] >= request - 1)))
+    {
+        status = pairs_row_handler (count_rows, plane, request,
+                                    small_handler_callback,
+                                    small_handler_ctx,
+                                    sector_of_anchor, row_out);
+        if (status == GEAR_SUCCESS) goto convicted;
+    }
 
     return GEAR_EXHAUST;
 

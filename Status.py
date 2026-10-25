@@ -25,6 +25,13 @@ class Status:
                           # with the sum of its row counters
     FAIL_GAMMA_OVERALL = 7  # Gamma ladder: the overall counter
                             # disagrees with the sum of plane counters
+    TINY_FAIL = 9  # Tiny probe acquittal: no Left run of at least 9
+                   # reaching the request, and no sufficient tail run
+    SMALL_FAIL = 10  # Small probe acquittal: no tail + head pair
+                     # reaching the request (either edge missing,
+                     # or P + Q < request). Not the paper's APL
+                     # FAIL_SMALL 6, which collides with
+                     # FAIL_GAMMA_PLANE.
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; separate names, and a nonzero success,

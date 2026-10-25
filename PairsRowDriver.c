@@ -4,7 +4,7 @@
    The Small Resolution" of the academic paper titled "An Extension of
    Buddy Systems to Arbitrary Radix for Deterministic Memory Allocation",
    provided by author Andrew Jonathan Fine.
-   DRAFT, uncommitted, not yet wired into Gears.py or build_gears.bat.
+   Wired into Gears.py (scan_small, scan_pairs) and build_gears.bat.
    The gear is mode-neutral: it knows counters and pairs, never tables.
    Arrangement lives in the bullet, bound once through pairs_gear_bind.
    The bullet determines the start sector; this driver forwards the

@@ -34,3 +34,20 @@ is other machinery, which this naming layer is built to sit under.
 Placement: the author sees nowhere for this in the paper except as
 further work. His assessment, verbatim in substance: this is the
 part that is PhD worthy.
+
+Further research, 2026-10-25, author's question, not a build order:
+design by statistics deciding the shape itself, not just back-end
+driver rules. Hypothesis, in his words: what are the best bullets
+for a stacked cube geometry? What if my current choices are not
+optimal for it? Modes ranges (Nano 1-8, Tiny 9-32, Small 33-64, Large
+65-1024, Huge 1025-32767) and bullets/probes (Center, Left, Right,
+edge-join, high/low side, first versus largest run) were chosen by
+what seemed logical, from A, A/4, 2A, A squared, A cubed, and
+polytopes. What if measured statistics, stall, variance, gate
+reads, churn survival, reuse, on multiple traces and distributions,
+decided those boundaries and bullet variants instead? Recorded
+only; no experiment, no boundary change, no paper draft ordered.
+Caveats recorded with it: guard against overfitting to one seed
+or size distribution, need a geometric/probe explanation for any
+statistically preferred boundary, and preserve contiguous,
+exhaustive, bounded, deterministic dispatch.

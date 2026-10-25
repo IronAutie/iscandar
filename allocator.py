@@ -118,7 +118,26 @@ class Engine (Cube):
         # this O(1) check catches the same inconsistencies. A
         # per-site gate code can replace generic FAIL here when
         # one is named.)
-        if (Plane.SECTORS_PER_PLANE - self.count_planes [plane]
+        # Small is pair-aware, not single-row: a valid Small
+        # block crosses a row boundary, so its anchor row free
+        # and its anchor plane free can both be below the
+        # request, while the pair's free sum reaches it. The
+        # bullet already certified the edges (tail + head);
+        # this gate checks only that the pair's counters agree
+        # with that certification. A single-row gate here would
+        # reject every valid Small placement, since a row holds
+        # at most 32 and Small starts at 33.
+        from Small import Small
+        if isinstance (mode, Small):
+            anchor = plane * Row.SECTORS_PER_ROW + row
+            ancillary = anchor + 1
+            if ancillary > Cube.ROWS_PER_CUBE - 1:
+                return Status.FAIL
+            if (Row.SECTORS_PER_ROW - self.count_rows [anchor]
+                    + Row.SECTORS_PER_ROW - self.count_rows [ancillary]
+                    < request):
+                return Status.FAIL
+        elif (Plane.SECTORS_PER_PLANE - self.count_planes [plane]
                 < request
                 or Row.SECTORS_PER_ROW
                 - self.count_rows [plane * Row.SECTORS_PER_ROW + row]
