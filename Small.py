@@ -13,7 +13,8 @@ class Small (Mode):
         return self.inclusive (Row.SECTORS_PER_ROW + 1,
                                Row.SECTORS_TWEEN_ROWS)
 
-    def search (self, request, count_planes, count_rows, words):
+    def search (self, request, count_planes, count_rows, words,
+                count_overall=None):
         "Run this mode's search/test pattern against the C gears."
 
         # Separate gear, called from Small mode like pairs_gear:

@@ -97,8 +97,16 @@ class Engine (Cube):
         # Step 3: the mode's search, through the C gears. A success
         # carries plane, row, and the start sector relative to the
         # row found; any other status is the search's failure.
-        status, plane, row, sector = mode.search (
-            request, self.count_planes, self.count_rows, self.sectors)
+        # Nothing.search returns None, not a gear tuple.
+        # Engine returns that result directly, with no
+        # unpacking, no mark, and no pointer. Every other
+        # search returns the uniform tuple below.
+        search_result = mode.search (
+            request, self.count_planes, self.count_rows, self.sectors,
+            self.count_overall)
+        if search_result is None:
+            return None
+        status, plane, row, sector = search_result
 
         # Step 4: if failure, return it. The gear's exhaust is
         # unique -- GEAR_EXHAUST means the whole cube, no placement
@@ -127,8 +135,21 @@ class Engine (Cube):
         # with that certification. A single-row gate here would
         # reject every valid Small placement, since a row holds
         # at most 32 and Small starts at 33.
+        from CubeCheck import CubeCheck
         from Small import Small
-        if isinstance (mode, Small):
+        if isinstance (mode, CubeCheck):
+            # Cube is whole-cube only, not single-row or
+            # single-plane: a plane holds at most 1024 and
+            # a row at most 32, so the usual gate could
+            # never pass for 32768. The certification here
+            # is the overall count itself: zero, and the
+            # request the whole cube. Engine step 1 and
+            # Cube.search already checked both; this gate
+            # is the same check as post-search verification.
+            if (request != Cube.SECTORS_PER_CUBE
+                    or self.count_overall != 0):
+                return Status.FAIL
+        elif isinstance (mode, Small):
             anchor = plane * Row.SECTORS_PER_ROW + row
             ancillary = anchor + 1
             if ancillary > Cube.ROWS_PER_CUBE - 1:

@@ -8,7 +8,8 @@ class Mode:
         return 0
 
 
-    def search (self, request, count_planes, count_rows, words):
+    def search (self, request, count_planes, count_rows, words,
+                count_overall=None):
         "Run this mode's search/test pattern against the C gears."
 
         # The pattern lives on the mode. The base runs the standard
