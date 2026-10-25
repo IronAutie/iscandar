@@ -1,15 +1,18 @@
-/* PlanesCheck.c -- planes gear, rotated sweep (2026-10-24):
+/* PlanesCheck.c -- planes gear, camping driver (experiment copy, 2026-10-24):
    32 lane procedures called via pointers from the driver procedure.
    Each lane encloses one plane's gate and row trial; a lane returns
    GEAR_SUCCESS on conviction, GEAR_EXHAUST when this plane has nothing
    (gate skip or row handler without conviction -- mapping (a), exact
    preservation of the goto version's behavior).
-   ROTATED SWEEP: a function-local static start cursor inside planes_gear
-   advances by one lane on every entry (wrapping 31 -> 0). The driver
-   walks 32 guarded unrolled statements from start, wrapping back to
-   lane 0, so every lane is tried exactly once and GEAR_EXHAUST still
-   means the whole cube was searched. Single-threaded working assumption
-   (embedded origin). Committed 2026-10-24, tagged Rotate. */
+   CAMPING (channels): a function-local static home cursor inside
+   planes_gear holds the last conviction lane. The driver walks 32
+   guarded unrolled statements from home, wrapping back to lane 0, so
+   every lane is tried exactly once and GEAR_EXHAUST still means the
+   whole cube was searched. On conviction home jumps to the convicted
+   lane, wherever it was; on exhaust home stays put, since frees
+   between entries may revive it. Single-threaded working assumption
+   (embedded origin). Experiment copy: not committed; repo working
+   tree still holds sticky-start; Rotate (08db207) still the pushed tip. */
 
 
 
@@ -673,173 +676,178 @@ __declspec(dllexport) int32_t planes_gear (    const uint32_t *count_planes, con
     row_handler_fn row_handler, bullet_fn item_handler, void *ctx,
     uint32_t *sector_out, uint32_t *row_out, uint32_t *plane_out)
 {
-    static const plane_lane_fn *start = planes_lanes;
+    static const plane_lane_fn *home = planes_lanes;
     const plane_lane_fn *end = planes_lanes + PLANES_PER_CUBE;
     const plane_lane_fn *lane;
     int32_t  status;
 
-    start++;
-    if (start >= end) start = planes_lanes;
-    lane = start;
+    lane = home;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
     if (lane >= end) lane = planes_lanes;
     status = (*lane++)(count_planes, count_rows, request,
                        row_handler, item_handler, ctx,
                        sector_out, row_out, plane_out);
-    if (status == GEAR_SUCCESS) return GEAR_SUCCESS;
+    if (status == GEAR_SUCCESS) goto convicted;
+    /* Exhaust: home stays put; frees between entries may revive it. */
     return GEAR_EXHAUST;
+convicted:
+    /* Camp: home jumps to the convicted lane, wherever it was.
+       lane - 1 is the convicted lane: the guard keeps lane below
+       end before every call, so lane - 1 is always a valid lane. */
+    home = lane - 1;
+    return GEAR_SUCCESS;
 }
