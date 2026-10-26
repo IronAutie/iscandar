@@ -137,6 +137,7 @@ class Engine (Cube):
         # at most 32 and Small starts at 33.
         from CubeCheck import CubeCheck
         from Small import Small
+        from Large import Large
         if isinstance (mode, CubeCheck):
             # Cube is whole-cube only, not single-row or
             # single-plane: a plane holds at most 1024 and
@@ -148,6 +149,28 @@ class Engine (Cube):
             # is the same check as post-search verification.
             if (request != Cube.SECTORS_PER_CUBE
                     or self.count_overall != 0):
+                return Status.FAIL
+        elif isinstance (mode, Large):
+            # Large is multi-row, multi-plane by design: a valid
+            # Large block crosses row boundaries, and may cross
+            # a plane boundary, so its start row free and its
+            # start plane free can both be below the request.
+            # The probe already certified a contiguous span;
+            # this gate checks only that the span fits the
+            # cube and that the planes it spans hold at least
+            # the request free in total.
+            start_global = (plane * Plane.SECTORS_PER_PLANE
+                            + row * Row.SECTORS_PER_ROW + sector)
+            end_global = start_global + request
+            if end_global > Cube.SECTORS_PER_CUBE:
+                return Status.FAIL
+            first_plane = start_global // Plane.SECTORS_PER_PLANE
+            last_plane = (end_global - 1) // Plane.SECTORS_PER_PLANE
+            free_spanned = 0
+            for pl in range(first_plane, last_plane + 1):
+                free_spanned += (Plane.SECTORS_PER_PLANE
+                                 - self.count_planes[pl])
+            if free_spanned < request:
                 return Status.FAIL
         elif isinstance (mode, Small):
             anchor = plane * Row.SECTORS_PER_ROW + row

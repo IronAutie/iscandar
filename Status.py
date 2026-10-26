@@ -32,6 +32,10 @@ class Status:
                      # or P + Q < request). Not the paper's APL
                      # FAIL_SMALL 6, which collides with
                      # FAIL_GAMMA_PLANE.
+    LARGE_FAIL = 11  # Large probe acquittal: no core blank
+                     # sequence with a fitting head/tail
+                     # scenario. Not the paper's APL FAIL_LARGE
+                     # 7, which collides with FAIL_GAMMA_OVERALL.
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; separate names, and a nonzero success,
