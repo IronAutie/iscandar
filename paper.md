@@ -19,7 +19,7 @@ bibliography: paper.bib
 
 # Summary
 
-`iscandar` is a deterministic memory allocator for resource-constrained and real-time systems. Implemented as a hybrid Python and C architecture, it responds to memory allocation requests by mapping sectors to a series of 32-bit virtual pointers over a fixed pool of 32,768 sectors of 16 bytes each (512 KiB). Allocation costs are bounded by construction rather than estimated from samples — constant in the small-request regimes, and measured at five sigma against a declared bound in the Nano regime — backed by an integrated oracle testing and verification framework.
+`iscandar` is a deterministic memory allocator for resource-constrained and real-time systems. Implemented as a hybrid Python and C architecture, it responds to memory allocation requests by mapping sectors to a series of 32-bit virtual pointers over a fixed pool of 32,768 sectors of 4 bytes each (128 KiB). Allocation costs are bounded by construction rather than estimated from samples — constant in the small-request regimes, and measured at five sigma against a declared bound in the Nano regime — backed by an integrated oracle testing and verification framework.
 
 # Statement of Need
 
