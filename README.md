@@ -106,9 +106,9 @@ The original hand drawings are in the [FractalClosedMemory wiki](https://github.
 
 ## Status
 
-The Python engine — Iscandar implemented beside a simulated buddy allocator, identical traces through both, comparing Iscandar's flat k×A per-operation cost against the buddy system's degradation with occupancy and fragmentation — is the author's current work, in progress.
+The Python engine is complete: all search modes — Nothing, Nano, Tiny, Small, Large, Huge, Cube, and Error — are implemented and covered by the acceptance test suite in `test_engine.py`. Large and Huge each carry a second pass for split-edge spans, so a placement is found whenever a contiguous free run of the request exists.
 
-As of the JOSS prep in October 2026, Nano, Tiny, Small, Cube, Error, and Nothing search modes are implemented; Large and Huge remain to be specified.
+Measured comparisons against a classic binary buddy allocator on identical seeded traces — occupancy, rounding waste, cost stability, and survival under six RTOS-shaped load profiles — are in `results/`, with the per-operation records beside the reports. A Windows (Visual Studio 2010) build-and-test verification of the C drivers at the author's bench remains the last step before a versioned release.
 
 ---
 
