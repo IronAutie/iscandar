@@ -115,3 +115,9 @@ As of the JOSS prep in October 2026, Nano, Tiny, Small, Cube, Error, and Nothing
 ## Dedication
 
 To Jennifer: Everything. Always. Forever.
+
+## License
+
+Software in this repository is licensed under the MIT License, see `LICENSE`.
+
+The paper and documentation in this repository are licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
