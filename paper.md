@@ -8,7 +8,7 @@ tags:
 - virtual coordinates
 authors:
 - name: Andrew Jonathan Fine
-  orcid: 0000-0000-0000-0000
+  orcid: 0009-0001-2312-380X
   affiliation: 1
 affiliations:
 - name: Independent Researcher in Computer Architecture
