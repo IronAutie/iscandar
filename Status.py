@@ -36,6 +36,35 @@ class Status:
                      # sequence with a fitting head/tail
                      # scenario. Not the paper's APL FAIL_LARGE
                      # 7, which collides with FAIL_GAMMA_OVERALL.
+    HUGE_FAIL = 12  # Huge probe acquittal (general site):
+                    # a Huge candidate failed for a reason with
+                    # no more specific Huge code below.
+    HUGE_GATE_TRAILING_PLANE_GATE_FAIL = 13  # Huge no leading:
+                    # the plane following the core cannot
+                    # satisfy the remaining request (gate).
+                    # Named, per the blackboard, to set a
+                    # breakpoint on this exact site.
+    HUGE_TRAILING_ROW_GATE_FAIL = 14  # Huge no leading: a
+                    # required trailing row in the following
+                    # plane does not have a zero count.
+                    # Named for breakpointing.
+    HUGE_NO_LEAD_TRAILER_FAIL = 15  # Huge no leading: the
+                    # following row's oracle check for the
+                    # final sectors fails. Named to set a
+                    # breakpoint.
+    HUGE_NO_TRAILER_ROW_FAIL = 16  # Huge no trailing: a row
+                    # reversed into while checking lead
+                    # padding rows does not have a zero count.
+                    # Named for breakpointing.
+    HUGE_ROW_DRIVER_TRAILING_ROW_FAIL = 17  # Normal Huge:
+                    # a row in the trailing padding function
+                    # body does not have a zero count. Named
+                    # for breakpointing.
+    HUGE_ROW_DRIVER_TRAILER_PADDING_FAIL = 18  # Normal Huge:
+                    # the final trailing row's Left oracle
+                    # check does not have room for the
+                    # remaining padding sectors. Named for
+                    # breakpointing.
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; separate names, and a nonzero success,

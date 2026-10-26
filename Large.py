@@ -11,6 +11,10 @@ def _trailing_run(word):
     This is the Right oracle, in row-word terms: the run that
     ends at the right edge. A word with sector 31 occupied
     gives 0. A wholly clear word gives 32.
+
+    Scan start, pinned down 2026-10-26: sector 31, the MSB
+    bit. This is the trailing series in sector order, and
+    the same run the OracleRight file reports.
     """
     run = 0
     for sector in range(31, -1, -1):
@@ -27,6 +31,12 @@ def _leading_run(word):
     This is the Left oracle, in row-word terms: the run that
     starts at the left edge. A word with sector 0 occupied
     gives 0. A wholly clear word gives 32.
+
+    Scan start, pinned down 2026-10-26: sector 0, the LSB
+    bit, NOT the MSB. This is the leading series in sector
+    order, and the same run the OracleLeft file reports.
+    It is not the MSB-starting run; that is the trailing
+    run above.
     """
     run = 0
     for sector in range(32):

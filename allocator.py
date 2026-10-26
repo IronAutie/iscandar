@@ -138,6 +138,7 @@ class Engine (Cube):
         from CubeCheck import CubeCheck
         from Small import Small
         from Large import Large
+        from Huge import Huge
         if isinstance (mode, CubeCheck):
             # Cube is whole-cube only, not single-row or
             # single-plane: a plane holds at most 1024 and
@@ -150,15 +151,17 @@ class Engine (Cube):
             if (request != Cube.SECTORS_PER_CUBE
                     or self.count_overall != 0):
                 return Status.FAIL
-        elif isinstance (mode, Large):
-            # Large is multi-row, multi-plane by design: a valid
-            # Large block crosses row boundaries, and may cross
-            # a plane boundary, so its start row free and its
-            # start plane free can both be below the request.
-            # The probe already certified a contiguous span;
-            # this gate checks only that the span fits the
-            # cube and that the planes it spans hold at least
-            # the request free in total.
+        elif isinstance (mode, Large) or isinstance (mode, Huge):
+            # Large and Huge are multi-row, multi-plane by
+            # design: a valid block crosses row boundaries,
+            # and in general plane boundaries too (a Huge
+            # block may span up to the whole cube), so its
+            # start row free and its start plane free can
+            # both be below the request. The probe already
+            # certified a contiguous span; this gate checks
+            # only that the span fits the cube and that the
+            # planes it spans hold at least the request free
+            # in total.
             start_global = (plane * Plane.SECTORS_PER_PLANE
                             + row * Row.SECTORS_PER_ROW + sector)
             end_global = start_global + request
