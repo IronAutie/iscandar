@@ -37,6 +37,10 @@ Standard C memory allocators (such as `jemalloc` or `ptmalloc`) operate primaril
 
 The codebase couples high-level Python components for spatial modeling and verification with performance-critical C drivers handling the underlying sector state. Status symbols are explicitly exposed via `status.h`, allowing external C and Python scripts to monitor, step through, and validate allocation progress in real time.
 
+# Research Impact Statement
+
+Iscandar is a deterministic memory allocator for resource-constrained and real-time systems. Measured against a binary buddy allocator on identical request streams (see `results/`), it shows: zero internal waste — physical occupancy equals logical occupancy, where the buddy allocator carried the same workload at up to 31 points of rounding overhead; allocation costs with variance exactly zero under small-request profiles sustained over 100,000 operations; worst-case costs bounded by construction rather than estimated from samples; and a largest free run roughly three times the buddy allocator's at equal occupancy. The design goal is not throughput but certainty: an identical request stream produces identical placements, identical costs, and an identical failure point, so ground testing reproduces deployed behavior exactly.
+
 # Acknowledgements
 
 To Jennifer: Everything. Always. Forever.
