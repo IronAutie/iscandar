@@ -223,17 +223,30 @@ class Large(Mode):
 
     def _planes_driver(self, request, count_planes, count_rows,
                        words):
-        """Plane driver: launchings in ascending plane order.
+        """Plane driver: launchings in rotated plane order.
 
-        Launch gate, verbatim from the blackboard: a
-        launching cannot proceed unless the sum of free
-        sectors of the planes is at least the request.
-        For plane 31 there is no next plane, so its own
-        free sectors alone must reach the request.
-        Only two planes are considered per launching.
-        Returns a start coordinate, or None.
+        Rotate, as in Small, added 2026-10-26 on the
+        author's order: use the current start for this
+        call, then advance it by one for the next entry,
+        failures included, wrapping 31 to 0. The C gear
+        keeps its cursor in a function-local static; this
+        Python reference keeps its matching cursor on the
+        mode instance, which the Modes table holds for an
+        engine's lifetime. All 32 launchings are tried
+        exactly once per call. Launch gate, verbatim from
+        the blackboard: a launching cannot proceed unless
+        the sum of free sectors of the planes is at least
+        the request. For plane 31 there is no next plane,
+        so its own free sectors alone must reach the
+        request. Only two planes are considered per
+        launching. Search order wraps; placements do not:
+        there is no launching span from plane 31 around
+        to plane 0. Returns a start coordinate, or None.
         """
-        for plane in range(Geometry.ARITY):
+        start_at = getattr(self, "_rotate_start", 0)
+        self._rotate_start = ((start_at + 1) % Geometry.ARITY)
+        for attempt in range(Geometry.ARITY):
+            plane = (start_at + attempt) % Geometry.ARITY
             free_here = (Plane.SECTORS_PER_PLANE
                          - count_planes[plane])
             free_next = 0
