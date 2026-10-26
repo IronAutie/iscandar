@@ -65,6 +65,13 @@ class Status:
                     # check does not have room for the
                     # remaining padding sectors. Named for
                     # breakpointing.
+    HUGE_SPLIT_FAIL = 19  # Huge second sweep (2026-10-26
+                    # amendment): a split candidate (core - 1
+                    # empty planes flanked by both edge planes)
+                    # is acquitted: an allegedly empty core
+                    # plane is not empty, or the two edges
+                    # together cannot cover the remainder
+                    # plus one plane. Named for breakpointing.
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; separate names, and a nonzero success,

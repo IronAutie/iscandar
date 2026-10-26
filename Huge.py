@@ -48,6 +48,31 @@ class Huge(Mode):
        driver treats any of them as this candidate's
        acquittal and advances, and search reports
        GEAR_EXHAUST when no candidate in the cube fits.
+    6. Amendment, 2026-10-26 (second sweep, split
+       edges). Simulation caught the same specification
+       error as in Large, one level up: a contiguous
+       span decomposes as head plane + f whole planes
+       + trailer plane with f either core or core - 1,
+       and items 2 and 3 cover only f = core. A span
+       with f = core - 1 (both edge planes principal,
+       their takes summing to remaining + one plane)
+       exhausted while an exact-fit contiguous hole
+       existed. The amendment adds a second sweep,
+       after the plane driver's first sweep finds
+       nothing: anchors of core - 1 consecutive empty
+       planes flanked by both edge planes, the leader
+       take computed by the normal handler's machinery
+       with its budget raised to remaining + one
+       plane, the trailer's fulfilment mandatory, as
+       in the normal handler (see _rows_split). For
+       core = 1 the empty run is empty and the anchor
+       is a plane boundary: a suffix of one plane
+       welded to a prefix of the next. The first
+       sweep is unchanged, so every placement it made
+       before the amendment is made identically after
+       it. With both sweeps, a placement exists if
+       and only if a contiguous free run of the
+       request exists.
     """
 
     def range(self):
@@ -272,6 +297,115 @@ class Huge(Mode):
                 return Status.HUGE_ROW_DRIVER_TRAILER_PADDING_FAIL, None
         return (Status.GEAR_SUCCESS, start)
 
+    # -- the split handler (second sweep) --
+
+    def _plane_suffix_take(self, plane, count_rows, words):
+        """What a plane can give as a leader: its free
+        suffix, in sectors. Full zero rows from the
+        plane's end, then the trailing run of the
+        first non-empty row met. At most one plane.
+        """
+        take = 0
+        row = (plane + 1) * Geometry.ARITY - 1
+        floor = plane * Geometry.ARITY
+        while row >= floor:
+            if count_rows[row] == 0:
+                take += Geometry.ARITY
+                row -= 1
+            else:
+                take += _trailing_run(words[row])
+                break
+        return take
+
+    def _plane_prefix_take(self, plane, count_rows, words):
+        """What a plane can give as a trailer: its free
+        prefix, in sectors. Full zero rows from the
+        plane's start, then the leading run of the
+        first non-empty row met. At most one plane.
+        """
+        take = 0
+        row = plane * Geometry.ARITY
+        ceil = (plane + 1) * Geometry.ARITY
+        while row < ceil:
+            if count_rows[row] == 0:
+                take += Geometry.ARITY
+                row += 1
+            else:
+                take += _leading_run(words[row])
+                break
+        return take
+
+    def _split_attempt(self, seam, request, count_planes,
+                       count_rows, words):
+        """One split candidate: core - 1 empty planes
+        starting at seam, flanked by a head plane at
+        seam - 1 and a trailer plane at seam + core - 1.
+        The edges together must cover the need, which
+        is remaining + one plane; the leader is taken
+        first (up to the need), the trailer must
+        fulfil the rest. Returns a global start, or
+        None.
+        """
+        core = request // (Geometry.ARITY * Geometry.ARITY)
+        width = core - 1
+        remaining = request % (Geometry.ARITY
+                               * Geometry.ARITY)
+        for follower in range(seam, seam + width):
+            if count_planes[follower] != 0:
+                return None
+        need = remaining + Plane.SECTORS_PER_PLANE
+        leader_take = self._plane_suffix_take(
+            seam - 1, count_rows, words)
+        if leader_take > need:
+            leader_take = need
+        still_owed = need - leader_take
+        if still_owed > 0:
+            trailer_take = self._plane_prefix_take(
+                seam + width, count_rows, words)
+            if trailer_take < still_owed:
+                return None
+        return seam * Plane.SECTORS_PER_PLANE - leader_take
+
+    def _rows_split(self, seam, request, count_planes,
+                    count_rows, words):
+        """Split handler: a thin wrapper over
+        _split_attempt, so the named failure has the
+        one return site the status discipline wants.
+        Returns (status, start).
+        """
+        start = self._split_attempt(seam, request,
+                                    count_planes, count_rows,
+                                    words)
+        if start is None:
+            return Status.HUGE_SPLIT_FAIL, None
+        return (Status.GEAR_SUCCESS, start)
+
+    def _split_call(self, seam, request, ctx, sector_out):
+        """Bullet for one split candidate, shaped like
+        __call__. seam is the first of the core - 1
+        empty planes (for core = 1, the trailer plane
+        of the boundary). ctx is (count_planes,
+        count_rows, words).
+        """
+        count_planes, count_rows, words = ctx
+        if request not in self.range():
+            return Status.HUGE_SPLIT_FAIL
+        core = request // (Geometry.ARITY * Geometry.ARITY)
+        if seam < 1 or seam + core - 1 > Cube.PLANES_PER_CUBE - 1:
+            return Status.HUGE_SPLIT_FAIL
+        status, start = self._rows_split(
+            seam, request, count_planes, count_rows, words)
+        if status != Status.GEAR_SUCCESS or start is None:
+            return status
+        if not self._span_free(start, request, words):
+            return Status.HUGE_FAIL
+        self.last_start = (start // Plane.SECTORS_PER_PLANE,
+                           (start % Plane.SECTORS_PER_PLANE)
+                           // Geometry.ARITY,
+                           start % Geometry.ARITY)
+        sector_out[0] = start % Geometry.ARITY
+        return Status.GEAR_SUCCESS
+
     # -- bullet and plane driver --
 
     def __call__(self, plane, row, request, ctx, sector_out):
@@ -317,13 +451,18 @@ class Huge(Mode):
 
     def _planes_driver(self, request, count_planes, count_rows,
                        words):
-        """Huge plane driver (facts 2 to 13).
+        """Huge plane driver (facts 2 to 13, plus the
+        2026-10-26 amendment).
 
-        Check each plane in turn as the first of the core
-        planes; a plane with zero count whose followers
-        also have zero count is a candidate and fires one
-        of the three row handlers. Failing a coordinate,
-        advance to the next originating plane.
+        First sweep: check each plane in turn as the
+        first of the core planes; a plane with zero
+        count whose followers also have zero count is
+        a candidate and fires one of the three row
+        handlers. Failing a coordinate, advance to the
+        next originating plane. Second sweep, only
+        when the first finds nothing: split candidates
+        (core - 1 empty planes, both edge planes
+        principal) via the split handler.
         """
         core = request // (Geometry.ARITY * Geometry.ARITY)
         ctx = (count_planes, count_rows, words)
@@ -336,6 +475,23 @@ class Huge(Mode):
                 if status == Status.GEAR_SUCCESS:
                     return self.last_start
             candidate += 1
+        # Second sweep, the 2026-10-26 amendment: split
+        # candidates, core - 1 empty planes flanked by
+        # both edge planes. A seam names the first of
+        # the empty planes; for core = 1 there are no
+        # empty planes and the seam is the boundary's
+        # trailer plane. Seams run 1 .. 31 - (core - 1),
+        # so the head plane and the trailer plane both
+        # always exist.
+        width = core - 1
+        seam = 1
+        while seam + width <= Cube.PLANES_PER_CUBE - 1:
+            sector_out = [0]
+            status = self._split_call(seam, request, ctx,
+                                      sector_out)
+            if status == Status.GEAR_SUCCESS:
+                return self.last_start
+            seam += 1
         return None
 
     def search(self, request, count_planes, count_rows, words,

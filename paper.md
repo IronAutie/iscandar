@@ -41,6 +41,8 @@ The codebase couples high-level Python components for spatial modeling and verif
 
 To Jennifer: Everything. Always. Forever.
 
+The author also thanks Muse, which performed intelligent simulations to catch specification errors for the Large and Huge allocation modes, and wrote the second-pass patches that corrected them.
+
 # AI Usage Disclosure
 
 In early 2026, at his therapist's suggestion to ease the PTSD from a project he was forced to walk away from in 1998, the author transcribed his designs for the memory allocator he had made into drawings and charts, using his own notation and pseudocode. Gemini identified that work as noteworthy, taught him the proper mathematical notation to turn those notes into the skeleton of an academic paper, and then conducted a literature search showing its dependence on fundamental concepts from his schooling and work. Gemini also informed him that the company he had worked for had gone defunct, and that after the lapse period he had therefore inherited the copyright as the original author. Gemini never directly generated the Overleaf files; the author typed phrases directly into the LaTeX and accepted suggestions for formatting.

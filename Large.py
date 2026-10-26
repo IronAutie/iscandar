@@ -104,6 +104,31 @@ class Large(Mode):
        multiple statements as an unrolled loop; in
        this Python reference it is the same rolling
        window, advanced one row at a time.
+    9. Amendment, 2026-10-26 (second pass, split
+       edges). Simulation caught a specification
+       error in the case analysis above: a contiguous
+       span decomposes as head + f whole rows + tail
+       with f either core or core - 1, and items 5
+       and 6 cover only f = core. A span with
+       f = core - 1 (both edges principal, head +
+       tail = remainder + arity) exhausted while an
+       exact-fit contiguous hole existed. The
+       amendment completes Option A rather than
+       adding an Option B: when the first pass finds
+       no launching, a second pass runs the same
+       drivers with a core - 1 window and a unified
+       edge budget (see _probe_split). The second
+       pass's launch gate adds the free count of
+       the single head row before the launching
+       plane, because a split span can lean up to
+       arity - 1 sectors into that row, which the
+       two-plane sum never counts. The first
+       pass is unchanged, so every placement it made
+       before the amendment is made identically
+       after it; the second pass only rescues spans
+       the first pass could not see. With both
+       passes, a placement exists if and only if a
+       contiguous free run of the request exists.
     """
 
     def range(self):
@@ -221,16 +246,101 @@ class Large(Mode):
             core_start += 1
         return None
 
+    def _probe_split(self, core_start, request, words):
+        """One core start of the second pass: the
+        split-edge case, f = core - 1 blank rows.
+
+        The blank rows are core_start .. core_start +
+        core - 2. What they do not cover is the budget:
+        request minus the blank rows' sectors, which
+        is remainder + arity. The head row's trailing
+        run is taken whole toward the budget (it is
+        at most arity - 1, always less than the
+        budget, so the tail is always needed too);
+        the tail row, the row right after the blank
+        rows, must cover the rest of the budget with
+        its leading run. Returns a start coordinate,
+        or None.
+        """
+        if request not in self.range():
+            return None
+        core = request // Geometry.ARITY
+        width = core - 1
+        if core_start < 0 or core_start + width > 1024:
+            return None
+        for g in range(core_start, core_start + width):
+            if words[g] != 0:
+                return None
+        budget = request - width * Geometry.ARITY
+        head_take = 0
+        if core_start > 0:
+            head_take = _trailing_run(words[core_start - 1])
+        owed = budget - head_take
+        if owed <= 0:
+            return None
+        tail_row = core_start + width
+        if tail_row >= 1024:
+            return None
+        if _leading_run(words[tail_row]) < owed:
+            return None
+        start = core_start * Geometry.ARITY - head_take
+        return (start // Plane.SECTORS_PER_PLANE,
+                (start % Plane.SECTORS_PER_PLANE)
+                // Geometry.ARITY,
+                start % Geometry.ARITY)
+
+    def _rows_driver_split(self, plane, request, count_rows,
+                           words):
+        """Second-pass row handler for one launching
+        plane: the first pass's rolling window at
+        width core - 1, probed by _probe_split.
+        Returns a start coordinate, or None.
+        """
+        core = request // Geometry.ARITY
+        width = core - 1
+        first = plane * Geometry.ARITY
+        if width < 1 or first + width > 1024:
+            return None
+        window_sum = 0
+        for g in range(first, first + width):
+            window_sum += count_rows[g]
+        core_start = first
+        while core_start < first + Geometry.ARITY:
+            if core_start + width > 1024:
+                break
+            if window_sum == 0:
+                start = self._probe_split(core_start,
+                                          request, words)
+                if start is not None:
+                    return start
+            if core_start + width < 1024:
+                window_sum += (count_rows[core_start + width]
+                               - count_rows[core_start])
+            core_start += 1
+        return None
+
     def _planes_driver(self, request, count_planes, count_rows,
                        words):
-        """Plane driver: launchings in ascending plane order.
+        """Plane driver: two passes over the launchings
+        in ascending plane order.
 
-        Launch gate, verbatim from the blackboard: a
-        launching cannot proceed unless the sum of free
-        sectors of the planes is at least the request.
-        For plane 31 there is no next plane, so its own
+        Pass one is the original driver, unchanged:
+        launchings in ascending order under the launch
+        gate, verbatim from the blackboard: a launching
+        cannot proceed unless the sum of free sectors
+        of the planes is at least the request. For
+        plane 31 there is no next plane, so its own
         free sectors alone must reach the request.
         Only two planes are considered per launching.
+        Pass two, the 2026-10-26 amendment, runs only
+        when pass one finds nothing: the same
+        launchings, with the split rows driver
+        (core - 1 blank rows, both edges principal),
+        under the launch gate plus one allowance:
+        the free count of the single head row before
+        the launching plane, because a split span
+        can lean up to arity - 1 sectors into that
+        row and the two-plane sum never counts it.
         Returns a start coordinate, or None.
         """
         for plane in range(Geometry.ARITY):
@@ -244,6 +354,26 @@ class Large(Mode):
                 continue
             start = self._rows_driver(plane, request,
                                       count_rows, words)
+            if start is not None:
+                return start
+        for plane in range(Geometry.ARITY):
+            free_here = (Plane.SECTORS_PER_PLANE
+                         - count_planes[plane])
+            free_next = 0
+            if plane + 1 < Geometry.ARITY:
+                free_next = (Plane.SECTORS_PER_PLANE
+                             - count_planes[plane + 1])
+            head_allowance = 0
+            if plane > 0:
+                head_allowance = (Row.SECTORS_PER_ROW
+                                  - count_rows[plane
+                                               * Geometry.ARITY
+                                               - 1])
+            if (free_here + free_next + head_allowance
+                    < request):
+                continue
+            start = self._rows_driver_split(plane, request,
+                                            count_rows, words)
             if start is not None:
                 return start
         return None

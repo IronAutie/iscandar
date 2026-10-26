@@ -205,3 +205,72 @@ EXPORT int32_t rows_huge_gear(const uint32_t *count_planes,
         count_planes, count_rows, words,
         plane_out, row_out, sector_out);
 }
+
+/* Second sweep (amendment 2026-10-26): the split case.
+   plane_suffix_take: what a plane gives as a leader, its
+   free suffix in sectors: full zero rows from the plane's
+   end, then the trailing run of the first non-empty row.
+   plane_prefix_take mirrors it as a trailer. */
+static uint32_t plane_suffix_take(const uint32_t *count_rows,
+                                  const uint32_t *words,
+                                  uint32_t plane) {
+    uint32_t take = 0;
+    int32_t row = (int32_t)((plane + 1) * ARITY) - 1;
+    int32_t floor_row = (int32_t)(plane * ARITY);
+    while (row >= floor_row) {
+        if (count_rows[row] == 0) { take += ARITY; row--; }
+        else { take += trailing_run(words[row]); break; }
+    }
+    return take;
+}
+static uint32_t plane_prefix_take(const uint32_t *count_rows,
+                                  const uint32_t *words,
+                                  uint32_t plane) {
+    uint32_t take = 0;
+    uint32_t row = plane * ARITY;
+    uint32_t ceil_row = (plane + 1) * ARITY;
+    while (row < ceil_row) {
+        if (count_rows[row] == 0) { take += ARITY; row++; }
+        else { take += leading_run(words[row]); break; }
+    }
+    return take;
+}
+
+/* Split handler for one seam: core - 1 empty planes
+   starting at seam, a head plane at seam - 1, a trailer
+   plane at seam + core - 1. The edges together must
+   cover remaining + one plane; the leader is taken
+   first, the trailer must fulfil the rest. For core = 1
+   the empty run is empty and the seam is the boundary's
+   trailer plane. Returns GEAR_SUCCESS with the start,
+   or GEAR_FAIL. (The named HUGE_SPLIT_FAIL lives in the
+   Python reference; the C gears return gear codes, as
+   elsewhere.) */
+EXPORT int32_t rows_huge_split_gear(const uint32_t *count_planes,
+                                    const uint32_t *count_rows,
+                                    const uint32_t *words,
+                                    uint32_t seam,
+                                    uint32_t request,
+                                    uint32_t *plane_out,
+                                    uint32_t *row_out,
+                                    uint32_t *sector_out) {
+    uint32_t core = request / SECTORS_PER_PLANE;
+    uint32_t width = core - 1;
+    uint32_t remaining = request % SECTORS_PER_PLANE;
+    uint32_t need = remaining + SECTORS_PER_PLANE;
+    uint32_t leader_take, still_owed, k;
+    if (seam < 1 || seam + width > PLANES - 1) return GEAR_FAIL;
+    for (k = 0; k < width; k++) {
+        if (count_planes[seam + k] != 0) return GEAR_FAIL;
+    }
+    leader_take = plane_suffix_take(count_rows, words, seam - 1);
+    if (leader_take > need) leader_take = need;
+    still_owed = need - leader_take;
+    if (still_owed > 0) {
+        if (plane_prefix_take(count_rows, words, seam + width)
+                < still_owed) return GEAR_FAIL;
+    }
+    put_start(seam * SECTORS_PER_PLANE - leader_take,
+              plane_out, row_out, sector_out);
+    return GEAR_SUCCESS;
+}
