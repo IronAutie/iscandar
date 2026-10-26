@@ -103,3 +103,9 @@ Assistance disclosure, in the author's framing: Gemini assisted with literature 
 The Python engine — Iscandar implemented beside a simulated buddy allocator, identical traces through both, comparing Iscandar's flat k×A per-operation cost against the buddy system's degradation with occupancy and fragmentation — is the author's current work, in progress.
 
 As of the JOSS prep in October 2026, Nano, Tiny, Small, Cube, Error, and Nothing search modes are implemented; Large and Huge remain to be specified.
+
+---
+
+## Dedication
+
+To Jennifer: Everything. Always. Forever.
