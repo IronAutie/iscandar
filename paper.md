@@ -49,7 +49,7 @@ Due to hallucinations Gemini suffered attempting to generate and test proper APL
 
 Note on versions: the author was not a sophisticated user of AI at the time, so the exact Gemini model version was not recorded, and is not in the Overleaf history. The earliest Overleaf Iscandar paper is dated 7 April 2026. By now he has learned to use AIs as bound demons for routine tasks.
 
-Starting dates, supported by evidence on Overleaf: Gemini's work on this paper began with the Overleaf project "Iscandar", created 7 April 2026. Muse's work began with the handover in October 2026, in the week before 25 October 2026.
+Starting dates, supported by evidence on Overleaf: Gemini's work on this paper began with the Overleaf project "Iscandar", created 7 April 2026. Muse's work began early last week, give or take, in mid-October 2026.
 
 The original hand drawings are in the FractalClosedMemory wiki, Table of Drawings, Chapters 1–3. They are the author's link to the 16-bit oracles for the Intel 80188 and Motorola 68332.
 
