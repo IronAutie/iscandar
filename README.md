@@ -98,6 +98,12 @@ Assistance disclosure, in the author's framing: Gemini assisted with literature 
 
 ---
 
+## Original hand drawings
+
+The original hand drawings are in the [FractalClosedMemory wiki](https://github.com/IronAutie/FractalClosedMemory/wiki/DRAWINGS) — Table of Drawings, Chapters 1–3. They are the author's link to the 16-bit oracles for the Intel 80188 and Motorola 68332.
+
+---
+
 ## Status
 
 The Python engine — Iscandar implemented beside a simulated buddy allocator, identical traces through both, comparing Iscandar's flat k×A per-operation cost against the buddy system's degradation with occupancy and fragmentation — is the author's current work, in progress.
