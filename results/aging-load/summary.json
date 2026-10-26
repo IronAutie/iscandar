@@ -1,0 +1,534 @@
+{
+  "meta": {
+    "race": "Aging Load load, full Iscandar vs buddy",
+    "seed": 1,
+    "mu": 48.5,
+    "sigma": 5.1667,
+    "lo": 33,
+    "hi": 64,
+    "ramp_target": 0.85,
+    "churn_ops": 5000,
+    "push_ops": 20000,
+    "max_ops": 100000,
+    "bimodal": false,
+    "counting": "see gaussian_race.py header",
+    "trace_ops": 25574
+  },
+  "executed_ops": 893,
+  "boundaries": [
+    574,
+    5574
+  ],
+  "terminated_by": "second_stall",
+  "stalls": [
+    {
+      "engine": "buddy",
+      "op": 512,
+      "phase": "ramp",
+      "own_logical_pct": 76.287841796875,
+      "own_physical_pct": 100.0,
+      "other_logical_pct": 76.42822265625,
+      "other_physical_pct": 76.42822265625
+    },
+    {
+      "engine": "iscandar",
+      "op": 892,
+      "phase": "churn",
+      "own_logical_pct": 87.2161865234375,
+      "own_physical_pct": 87.2161865234375,
+      "other_logical_pct": 76.287841796875,
+      "other_physical_pct": 100.0
+    }
+  ],
+  "margin": {
+    "ops": 380,
+    "physical_points": -12.7838134765625,
+    "logical_points": 10.9283447265625
+  },
+  "gamma": "green (block checks every op, full checks at boundaries and end)",
+  "reuse": {
+    "iscandar": {
+      "reused_allocs": 79,
+      "successful_allocs": 741,
+      "mean": 35.40506329113924,
+      "median": 27,
+      "min": 1,
+      "max": 162
+    },
+    "buddy": {
+      "reused_allocs": 0,
+      "successful_allocs": 512,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "motion": {
+    "iscandar": {
+      "alloc": {
+        "overall": {
+          "count": 741,
+          "mean": 6.0,
+          "variance": 0.0,
+          "stddev": 0.0,
+          "median": 6,
+          "min": 6,
+          "max": 6
+        },
+        "attempts": 742,
+        "failed_attempts": 1,
+        "bands": {
+          "0-5": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "5-10": {
+            "count": 34,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "10-15": {
+            "count": 34,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "15-20": {
+            "count": 34,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "20-25": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "25-30": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "30-35": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "35-40": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "40-45": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "45-50": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "50-55": {
+            "count": 34,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "55-60": {
+            "count": 35,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "60-65": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "65-70": {
+            "count": 33,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "70-75": {
+            "count": 35,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "75-80": {
+            "count": 35,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "80-85": {
+            "count": 110,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          },
+          "85-90": {
+            "count": 93,
+            "mean": 6.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 6,
+            "min": 6,
+            "max": 6
+          }
+        }
+      },
+      "free": {
+        "overall": {
+          "count": 151,
+          "mean": 4.0,
+          "variance": 0.0,
+          "stddev": 0.0,
+          "median": 4,
+          "min": 4,
+          "max": 4
+        },
+        "bands": {
+          "80-85": {
+            "count": 81,
+            "mean": 4.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 4,
+            "min": 4,
+            "max": 4
+          },
+          "85-90": {
+            "count": 70,
+            "mean": 4.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 4,
+            "min": 4,
+            "max": 4
+          }
+        }
+      }
+    },
+    "buddy": {
+      "alloc": {
+        "overall": {
+          "count": 512,
+          "mean": 3.99609375,
+          "variance": 7.8515472412109375,
+          "stddev": 2.8020612486544505,
+          "median": 4,
+          "min": 2,
+          "max": 20
+        },
+        "attempts": 513,
+        "failed_attempts": 1,
+        "bands": {
+          "0-5": {
+            "count": 25,
+            "mean": 4.48,
+            "variance": 15.1296,
+            "stddev": 3.8896786499658296,
+            "median": 4,
+            "min": 2,
+            "max": 20
+          },
+          "5-10": {
+            "count": 26,
+            "mean": 3.923076923076923,
+            "variance": 6.9171597633136095,
+            "stddev": 2.630049384196732,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "10-15": {
+            "count": 25,
+            "mean": 3.92,
+            "variance": 7.833600000000001,
+            "stddev": 2.7988569095257443,
+            "median": 2,
+            "min": 2,
+            "max": 14
+          },
+          "15-20": {
+            "count": 26,
+            "mean": 4.0,
+            "variance": 7.076923076923077,
+            "stddev": 2.660248687044705,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "20-25": {
+            "count": 25,
+            "mean": 3.84,
+            "variance": 5.0944,
+            "stddev": 2.2570777567465417,
+            "median": 4,
+            "min": 2,
+            "max": 10
+          },
+          "25-30": {
+            "count": 26,
+            "mean": 4.230769230769231,
+            "variance": 10.562130177514794,
+            "stddev": 3.2499431037350166,
+            "median": 4,
+            "min": 2,
+            "max": 16
+          },
+          "30-35": {
+            "count": 26,
+            "mean": 3.923076923076923,
+            "variance": 6.9171597633136095,
+            "stddev": 2.630049384196732,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "35-40": {
+            "count": 25,
+            "mean": 3.92,
+            "variance": 7.833600000000001,
+            "stddev": 2.7988569095257443,
+            "median": 2,
+            "min": 2,
+            "max": 14
+          },
+          "40-45": {
+            "count": 26,
+            "mean": 4.0,
+            "variance": 7.076923076923077,
+            "stddev": 2.660248687044705,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "45-50": {
+            "count": 25,
+            "mean": 3.84,
+            "variance": 5.0944,
+            "stddev": 2.2570777567465417,
+            "median": 4,
+            "min": 2,
+            "max": 10
+          },
+          "50-55": {
+            "count": 26,
+            "mean": 4.3076923076923075,
+            "variance": 12.520710059171599,
+            "stddev": 3.5384615384615388,
+            "median": 4,
+            "min": 2,
+            "max": 18
+          },
+          "55-60": {
+            "count": 26,
+            "mean": 3.923076923076923,
+            "variance": 6.9171597633136095,
+            "stddev": 2.630049384196732,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "60-65": {
+            "count": 25,
+            "mean": 3.92,
+            "variance": 7.833600000000001,
+            "stddev": 2.7988569095257443,
+            "median": 2,
+            "min": 2,
+            "max": 14
+          },
+          "65-70": {
+            "count": 26,
+            "mean": 4.0,
+            "variance": 7.076923076923077,
+            "stddev": 2.660248687044705,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "70-75": {
+            "count": 25,
+            "mean": 3.84,
+            "variance": 5.0944,
+            "stddev": 2.2570777567465417,
+            "median": 4,
+            "min": 2,
+            "max": 10
+          },
+          "75-80": {
+            "count": 26,
+            "mean": 4.230769230769231,
+            "variance": 10.562130177514794,
+            "stddev": 3.2499431037350166,
+            "median": 4,
+            "min": 2,
+            "max": 16
+          },
+          "80-85": {
+            "count": 26,
+            "mean": 3.923076923076923,
+            "variance": 6.9171597633136095,
+            "stddev": 2.630049384196732,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "85-90": {
+            "count": 25,
+            "mean": 3.92,
+            "variance": 7.833600000000001,
+            "stddev": 2.7988569095257443,
+            "median": 2,
+            "min": 2,
+            "max": 14
+          },
+          "90-95": {
+            "count": 26,
+            "mean": 4.0,
+            "variance": 7.076923076923077,
+            "stddev": 2.660248687044705,
+            "median": 4,
+            "min": 2,
+            "max": 12
+          },
+          "95-100": {
+            "count": 26,
+            "mean": 3.769230769230769,
+            "variance": 5.023668639053255,
+            "stddev": 2.241354197589764,
+            "median": 4,
+            "min": 2,
+            "max": 10
+          }
+        }
+      },
+      "free": {
+        "overall": {
+          "count": 0,
+          "mean": null,
+          "variance": null,
+          "stddev": null,
+          "median": null,
+          "min": null,
+          "max": null
+        },
+        "bands": {}
+      }
+    }
+  },
+  "sectors_per_access": {
+    "iscandar": {
+      "alloc": {
+        "count": 741,
+        "mean": 8.080971659919028,
+        "variance": 0.7220385820428438,
+        "stddev": 0.8497285343230765,
+        "median": 8.166666666666666,
+        "min": 5.5,
+        "max": 10.5
+      },
+      "free": {
+        "count": 151,
+        "mean": 12.167218543046358,
+        "variance": 1.5254319985965528,
+        "stddev": 1.2350838022565727,
+        "median": 12.0,
+        "min": 9.5,
+        "max": 15.0
+      }
+    },
+    "buddy": {
+      "alloc": {
+        "count": 512,
+        "mean": 16.882850089905755,
+        "variance": 63.9138680483489,
+        "stddev": 7.994614940592755,
+        "median": 17.0,
+        "min": 2.6875,
+        "max": 31.0
+      },
+      "free": {
+        "count": 0,
+        "mean": null,
+        "variance": null,
+        "stddev": null,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    }
+  },
+  "gate_reads_mean_alloc": {
+    "iscandar": 95.73954116059379,
+    "buddy": 0.0
+  }
+}

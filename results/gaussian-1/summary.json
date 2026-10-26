@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "race": "Gaussian One load, full Iscandar vs buddy",
+    "seed": 1,
+    "mu": 16386,
+    "sigma": 5461,
+    "lo": 1,
+    "hi": 32766,
+    "ramp_target": 0.5,
+    "churn_ops": 20000,
+    "push_ops": 20000,
+    "max_ops": 100000,
+    "counting": "see gaussian_race.py header",
+    "trace_ops": 40001
+  },
+  "executed_ops": 2,
+  "boundaries": [
+    1,
+    20001
+  ],
+  "terminated_by": "second_stall",
+  "stalls": [
+    {
+      "engine": "iscandar",
+      "op": 1,
+      "phase": "churn",
+      "own_logical_pct": 71.4752197265625,
+      "own_physical_pct": 71.4752197265625,
+      "other_logical_pct": 71.4752197265625,
+      "other_physical_pct": 100.0
+    },
+    {
+      "engine": "buddy",
+      "op": 1,
+      "phase": "churn",
+      "own_logical_pct": 71.4752197265625,
+      "own_physical_pct": 100.0,
+      "other_logical_pct": 71.4752197265625,
+      "other_physical_pct": 71.4752197265625
+    }
+  ],
+  "margin": {
+    "ops": 0,
+    "physical_points": 28.5247802734375,
+    "logical_points": 0.0
+  },
+  "gamma": "green (block checks every op, full checks at boundaries and end)",
+  "reuse": {
+    "iscandar": {
+      "reused_allocs": 0,
+      "successful_allocs": 1,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "buddy": {
+      "reused_allocs": 0,
+      "successful_allocs": 1,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "motion": {
+    "iscandar": {
+      "alloc": {
+        "overall": {
+          "count": 1,
+          "mean": 1467.0,
+          "variance": 0.0,
+          "stddev": 0.0,
+          "median": 1467,
+          "min": 1467,
+          "max": 1467
+        },
+        "attempts": 2,
+        "failed_attempts": 1,
+        "bands": {
+          "70-75": {
+            "count": 1,
+            "mean": 1467.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 1467,
+            "min": 1467,
+            "max": 1467
+          }
+        }
+      },
+      "free": {
+        "overall": {
+          "count": 0,
+          "mean": null,
+          "variance": null,
+          "stddev": null,
+          "median": null,
+          "min": null,
+          "max": null
+        },
+        "bands": {}
+      }
+    },
+    "buddy": {
+      "alloc": {
+        "overall": {
+          "count": 1,
+          "mean": 2.0,
+          "variance": 0.0,
+          "stddev": 0.0,
+          "median": 2,
+          "min": 2,
+          "max": 2
+        },
+        "attempts": 2,
+        "failed_attempts": 1,
+        "bands": {
+          "95-100": {
+            "count": 1,
+            "mean": 2.0,
+            "variance": 0.0,
+            "stddev": 0.0,
+            "median": 2,
+            "min": 2,
+            "max": 2
+          }
+        }
+      },
+      "free": {
+        "overall": {
+          "count": 0,
+          "mean": null,
+          "variance": null,
+          "stddev": null,
+          "median": null,
+          "min": null,
+          "max": null
+        },
+        "bands": {}
+      }
+    }
+  },
+  "sectors_per_access": {
+    "iscandar": {
+      "alloc": {
+        "count": 1,
+        "mean": 15.96523517382413,
+        "variance": 0.0,
+        "stddev": 0.0,
+        "median": 15.96523517382413,
+        "min": 15.96523517382413,
+        "max": 15.96523517382413
+      },
+      "free": {
+        "count": 0,
+        "mean": null,
+        "variance": null,
+        "stddev": null,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "buddy": {
+      "alloc": {
+        "count": 1,
+        "mean": 11710.5,
+        "variance": 0.0,
+        "stddev": 0.0,
+        "median": 11710.5,
+        "min": 11710.5,
+        "max": 11710.5
+      },
+      "free": {
+        "count": 0,
+        "mean": null,
+        "variance": null,
+        "stddev": null,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    }
+  },
+  "gate_reads_mean_alloc": {
+    "iscandar": 826.0,
+    "buddy": 0.0
+  }
+}

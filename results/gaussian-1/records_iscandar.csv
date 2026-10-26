@@ -1,0 +1,3 @@
+op,type,id,size,success,logical_pct,physical_pct,largest_free,reuse,status,accesses,gate_reads
+0,alloc,0,23421,ok,71.4752,71.4752,9347,,,1467,826
+1,alloc,1,24301,stall,71.4752,71.4752,9347,,1,0,1
