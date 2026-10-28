@@ -57,13 +57,13 @@ iscandar/
 ├── paper.md / paper.bib    # JOSS paper draft and bibliography
 │
 ├── paper/                  # Manuscript source and build artifacts
-│   └── Iscandar-44-final.pdf    # Finished monograph (final rendering)
+│   └── Iscandar-45-final.pdf    # Finished monograph (current rendering; the Iscandar-44 rendering is kept beside it)
 ├── code/oracles/           # Oracle table manufacture (create_oracles.py)
 ├── oracle/creators/src/    # Oracle creators, independent of engine code
 └── notes/                  # Design doctrine, JOSS framing, and architecture notes
 ```
 
-- `paper/` — the paper. `Iscandar-44-final.pdf` is the finished monograph (19 pages, final rendering 2026-10-27); the same PDF also sits at the repository root. It supersedes the earlier `Iscandar_24b.pdf` draft that lived here.
+- `paper/` — the paper. `Iscandar-45-final.pdf` is the finished monograph (20 pages, final rendering 2026-10-28): the measured figures regenerated from the published run records, and the acknowledgements. The same PDF also sits at the repository root. It supersedes the `Iscandar-44-final.pdf` rendering (19 pages, 2026-10-27), which is kept beside it, and the earlier `Iscandar_24b.pdf` draft that lived here.
   - Version history of the paper: https://github.com/IronAutie/iscandar-history
   - The paper's listings as a standalone repo: https://github.com/IronAutie/iscandar-listings
 - `code/oracles/` — `create_oracles.py`, the Python procedure that manufactures the oracle tables as bitwise files, from the math as specified in Appendix D of the paper. (The paper's APL oracle access files are being replaced with Python equivalents; the `.bin` layouts are unchanged.)
