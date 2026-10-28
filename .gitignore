@@ -6,3 +6,9 @@ data/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Build artifacts from build_gears.bat: regenerated on every build.
+*.obj
+*.exp
+*.lib
+*.dll
