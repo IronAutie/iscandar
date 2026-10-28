@@ -21,9 +21,11 @@
 #include "Commit.h"
 #include "status.h"
 
-int32_t mark_sectors(uint32_t *sectors, uint32_t *count_rows,
-                     uint32_t *count_planes, uint32_t start,
-                     uint32_t count)
+__declspec(dllexport) 
+  int32_t mark_sectors (uint32_t *sectors, 
+                        uint32_t *count_rows,
+                        uint32_t *count_planes, uint32_t start,
+                        uint32_t count)
 {
     return commit_sectors(sectors, count_rows, count_planes,
                           start, count, COMMIT_MARK);
