@@ -33,7 +33,9 @@ Standard C memory allocators (such as `jemalloc` or `ptmalloc`) operate primaril
 
 # Architecture & Design
 
-`iscandar` implements memory allocation via a multidimensional (k=3) fractal virtual coordinate mapping, overlaid as a bijection upon a linear (A=32) sector space kept in memory [@mandelbrot1982fractal; @bentley1975multidimensional]. By mapping linear allocation requests onto this fractal coordinate space, the architecture bounds sector map touch costs by construction rather than by statistical estimation [@montgomery2019introduction].
+`iscandar`[^starblazers] implements memory allocation via a multidimensional (k=3) fractal virtual coordinate mapping, overlaid as a bijection upon a linear (A=32) sector space kept in memory [@mandelbrot1982fractal; @bentley1975multidimensional].
+
+[^starblazers]: The name is a nod to Star Blazers. Iscandar is the distant world whose gift descends, complete and ready, to a world that cannot save itself. The design principle taken from it: the allocator is meant to drop in, install at once, and work with a minimum of instruction, as a Wave Motion Core does. By mapping linear allocation requests onto this fractal coordinate space, the architecture bounds sector map touch costs by construction rather than by statistical estimation [@montgomery2019introduction].
 
 The codebase couples high-level Python components for spatial modeling and verification with performance-critical C drivers handling the underlying sector state. Status symbols are explicitly exposed via `status.h`, allowing external C and Python scripts to monitor, step through, and validate allocation progress in real time.
 
