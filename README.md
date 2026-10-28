@@ -2,6 +2,8 @@
 
 *A Drop-in Memory Allocator with Bounded Variance via Fractal Virtual Coordinate Mapping*
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23748412.svg)](https://doi.org/10.5281/zenodo.23748412)
+
 ---
 
 ## Overview
