@@ -6,17 +6,24 @@
 # regeneration, the gcc gear build, and the acceptance tests.
 #
 # Usage:
-#   ./iscandar-linux-setup.sh [REPO_DIR]
+#   ./iscandar-linux-setup.sh [REPO_DIR] [--oracles]
 # REPO_DIR defaults to ~/iscandar (the repo root; the engine files live
 # at the root, there is no engine/ subfolder).
 #
+# With --oracles, the script also regenerates the oracle tables and runs
+# the oracle smoke test against them. The tables are about 52 GB and the
+# run takes a while (the Center table alone is about 36 GB). They land
+# in $ORACLES_OUTDIR, which defaults to ~/workspace/iscandar/oracles,
+# the path oracle_smoke_test.py checks by default on Linux.
+#
 # The script stops at the first failed step and says which one failed.
-# It does not touch git state and does not build the oracle tables;
-# those are a separate, longer run described in iscandar-linux-setup.md.
+# It does not touch git state.
 
 set -euo pipefail
 
 REPO_DIR="${1:-$HOME/iscandar}"
+WITH_ORACLES="${2:-}"
+ORACLES_OUTDIR="${ORACLES_OUTDIR:-$HOME/workspace/iscandar/oracles}"
 cd "$REPO_DIR"
 
 echo "== Step 1: system package for Python virtual environments =="
@@ -50,5 +57,18 @@ echo "== Step 5: acceptance tests =="
 # Expected: 22 tests, OK.
 .venv/bin/python test_engine.py
 
+if [ "$WITH_ORACLES" = "--oracles" ]; then
+    echo "== Step 6: regenerate the oracle tables (about 52 GB; this takes a while) =="
+    mkdir -p "$ORACLES_OUTDIR"
+    df -h "$ORACLES_OUTDIR" | tail -1
+    .venv/bin/python oracle/creators/src/create_oracles.py all --outdir "$ORACLES_OUTDIR"
+
+    echo "== Step 7: oracle smoke test =="
+    .venv/bin/python oracle_smoke_test.py --oracles "$ORACLES_OUTDIR"
+fi
+
 echo "Setup complete. The engine is built and tested in $REPO_DIR."
-echo "For the oracle tables and the smoke test, see iscandar-linux-setup.md."
+if [ "$WITH_ORACLES" != "--oracles" ]; then
+    echo "Oracle tables not built. Rerun with --oracles to regenerate them,"
+    echo "or see iscandar-linux-setup.md."
+fi
