@@ -1,0 +1,404 @@
+% Paper 2 bibliography core.
+% Built 2026-11-04 from paper-2-bibliography.txt (the spare) as corrected by
+% paper-2-bibliography-addendum.txt (verified against primary sources).
+% Entries marked [verify] in the addendum keep that caution in a note field.
+
+@book{knuth1997art1,
+  author    = {Knuth, Donald E.},
+  title     = {The Art of Computer Programming, Vol. 1: Fundamental Algorithms},
+  edition   = {2},
+  publisher = {Addison-Wesley},
+  year      = {1973},
+  note      = {Section 2.5, Dynamic Storage Allocation; 1st ed. 1968}
+}
+
+@inproceedings{wilson1995dynamic,
+  author    = {Wilson, Paul R. and Johnstone, Mark S. and Neely, Michael and Boles, David},
+  title     = {Dynamic Storage Allocation: A Survey and Critical Review},
+  booktitle = {Proc. Int'l Workshop on Memory Management (IWMM)},
+  series    = {LNCS},
+  volume    = {986},
+  pages     = {1--116},
+  publisher = {Springer},
+  year      = {1995}
+}
+
+@article{robson1971estimate,
+  author  = {Robson, J. M.},
+  title   = {An Estimate of the Store Size Necessary for Dynamic Storage Allocation},
+  journal = {Journal of the ACM},
+  volume  = {18},
+  number  = {3},
+  year    = {1971}
+}
+
+@article{robson1974bounds,
+  author  = {Robson, J. M.},
+  title   = {Bounds for Some Functions Concerning Dynamic Storage Allocation},
+  journal = {Journal of the ACM},
+  volume  = {21},
+  number  = {3},
+  pages   = {491--499},
+  year    = {1974}
+}
+
+@article{robson1977worstcase,
+  author  = {Robson, J. M.},
+  title   = {Worst Case Fragmentation of First Fit and Best Fit Storage Allocation Strategies},
+  journal = {The Computer Journal},
+  volume  = {20},
+  number  = {3},
+  year    = {1977}
+}
+
+@article{hirschberg1973class,
+  author  = {Hirschberg, Daniel S.},
+  title   = {A Class of Dynamic Memory Allocation Algorithms},
+  journal = {Communications of the ACM},
+  volume  = {16},
+  number  = {10},
+  pages   = {615--618},
+  year    = {1973},
+  doi     = {10.1145/362375.362392},
+  note    = {Fibonacci buddy primary source}
+}
+
+@article{shen1974weighted,
+  author  = {Shen, Kenneth K. and Peterson, James L.},
+  title   = {A Weighted Buddy Method for Dynamic Storage Allocation},
+  journal = {Communications of the ACM},
+  volume  = {17},
+  number  = {10},
+  pages   = {558--562},
+  year    = {1974},
+  doi     = {10.1145/355620.361164},
+  note    = {Corrigendum: CACM 18(4):202, 1975}
+}
+
+@article{weinstock1988quickfit,
+  author  = {Weinstock, Charles B. and Wulf, William A.},
+  title   = {QuickFit: An Efficient Algorithm for Heap Storage Allocation},
+  journal = {ACM SIGPLAN Notices},
+  volume  = {23},
+  number  = {10},
+  pages   = {141--144},
+  year    = {1988}
+}
+
+@inproceedings{ogasawara1995halffit,
+  author    = {Ogasawara, Takeshi},
+  title     = {An Algorithm with Constant Execution Time for Dynamic Storage Allocation},
+  booktitle = {RTCSA},
+  year      = {1995},
+  note      = {Half-Fit}
+}
+
+@inproceedings{masmano2004tlsf,
+  author    = {Masmano, Miguel and Ripoll, Ismael and Crespo, Alfons and Real, Jorge},
+  title     = {TLSF: A New Dynamic Memory Allocator for Real-Time Systems},
+  booktitle = {ECRTS},
+  pages     = {79--86},
+  year      = {2004}
+}
+
+@article{masmano2008constant,
+  author  = {Masmano, Miguel and Ripoll, Ismael and Balbastre, Patricia and Crespo, Alfons},
+  title   = {A Constant-Time Dynamic Storage Allocator for Real-Time Systems},
+  journal = {Real-Time Systems},
+  volume  = {40},
+  pages   = {149--179},
+  year    = {2008}
+}
+
+@article{masmano2008implementation,
+  author  = {Masmano, Miguel and Ripoll, Ismael and Real, Jorge and Crespo, Alfons and Wellings, Andy J.},
+  title   = {Implementation of a Constant-Time Dynamic Storage Allocator},
+  journal = {Software: Practice and Experience},
+  volume  = {38},
+  number  = {10},
+  pages   = {995--1026},
+  year    = {2008},
+  doi     = {10.1002/spe.858}
+}
+
+@misc{kirienko2020o1heap,
+  author       = {Kirienko, Pavel},
+  title        = {O1Heap: Constant-Complexity, Deterministic, Very Fast Memory Allocator for Hard Real-Time High-Integrity Embedded Systems},
+  howpublished = {GitHub repository},
+  year         = {2020},
+  url          = {https://github.com/pavel-kirienko/o1heap},
+  note         = {No paper exists; the repository is the citable reference}
+}
+
+@inproceedings{powers2019mesh,
+  author    = {Powers, Bobby and Tench, David and Berger, Emery D. and McGregor, Andrew},
+  title     = {Mesh: Compacting Memory Management for C/C++ Applications},
+  booktitle = {PLDI},
+  year      = {2019}
+}
+
+@inproceedings{berger2006diehard,
+  author    = {Berger, Emery D. and Zorn, Benjamin G.},
+  title     = {DieHard: Probabilistic Memory Safety for Unsafe Languages},
+  booktitle = {PLDI},
+  pages     = {158--168},
+  year      = {2006},
+  doi       = {10.1145/1133981.1134000}
+}
+
+@inproceedings{puaut2002realtime,
+  author    = {Puaut, Isabelle},
+  title     = {Real-Time Performance of Dynamic Memory Allocation Algorithms},
+  booktitle = {ECRTS},
+  pages     = {41--49},
+  year      = {2002},
+  doi       = {10.1109/EMRTS.2002.1019184},
+  note      = {Also IRISA Report PI-1429, January 2002}
+}
+
+@techreport{grunwald1992customalloc,
+  author      = {Grunwald, Dirk and Zorn, Benjamin},
+  title       = {CustoMalloc: Efficient Synthesized Memory Allocators},
+  institution = {University of Colorado, Boulder},
+  number      = {CU-CS-602-92},
+  year        = {1992}
+}
+
+@inproceedings{grunwald1993locality,
+  author    = {Grunwald, Dirk and Zorn, Benjamin and Henderson, Michael},
+  title     = {Improving the Cache Locality of Memory Allocation},
+  booktitle = {PLDI},
+  year      = {1993}
+}
+
+@article{detlefs1994costs,
+  author  = {Detlefs, David and Dosser, Al and Zorn, Benjamin},
+  title   = {Memory Allocation Costs in Large C and C++ Programs},
+  journal = {Software: Practice and Experience},
+  volume  = {24},
+  number  = {6},
+  pages   = {527--542},
+  year    = {1994},
+  doi     = {10.1002/spe.4380240602}
+}
+
+@inproceedings{johnstone1998fragmentation,
+  author    = {Johnstone, Mark S. and Wilson, Paul R.},
+  title     = {The Memory Fragmentation Problem: Solved?},
+  booktitle = {ISMM},
+  pages     = {26--36},
+  year      = {1998},
+  doi       = {10.1145/286860.286864}
+}
+
+@inproceedings{bonwick1994slab,
+  author    = {Bonwick, Jeff},
+  title     = {The Slab Allocator: An Object-Caching Kernel Memory Allocator},
+  booktitle = {USENIX Summer},
+  pages     = {87--98},
+  year      = {1994}
+}
+
+@inproceedings{bonwick2001vmem,
+  author    = {Bonwick, Jeff and Adams, Jonathan},
+  title     = {Magazines and Vmem: Extending the Slab Allocator to Many CPUs and Arbitrary Resources},
+  booktitle = {USENIX Annual Technical Conference},
+  pages     = {15--34},
+  year      = {2001}
+}
+
+@misc{lameter2007slub,
+  author       = {Lameter, Christoph},
+  title        = {SLUB: The Unqueued Slab Allocator},
+  howpublished = {LKML / LWN},
+  year         = {2007},
+  note         = {Merged in Linux 2.6.23}
+}
+
+@inproceedings{evans2006jemalloc,
+  author    = {Evans, Jason},
+  title     = {A Scalable Concurrent {malloc(3)} Implementation for {FreeBSD}},
+  booktitle = {BSDCan},
+  year      = {2006}
+}
+
+@techreport{leijen2019mimalloc,
+  author      = {Leijen, Daan and Zorn, Benjamin and de Moura, Leonardo},
+  title       = {Mimalloc: Free List Sharding in Action},
+  institution = {Microsoft Research},
+  number      = {MSR-TR-2019-18},
+  year        = {2019},
+  note        = {Also APLAS 2019, LNCS 11893, pp. 244--265}
+}
+
+@misc{ghemawat2005tcmalloc,
+  author       = {Ghemawat, Sanjay},
+  title        = {TCMalloc: Thread-Caching Malloc},
+  howpublished = {Google design document},
+  year         = {2005}
+}
+
+@misc{lea1996allocator,
+  author       = {Lea, Doug},
+  title        = {A Memory Allocator},
+  howpublished = {Unix/Mail},
+  year         = {1996},
+  note         = {The citable dlmalloc description}
+}
+
+@inproceedings{berger2001layers,
+  author    = {Berger, Emery D. and Zorn, Benjamin G. and McKinley, Kathryn S.},
+  title     = {Composing High-Performance Memory Allocators},
+  booktitle = {PLDI},
+  year      = {2001},
+  note      = {Heap Layers}
+}
+
+@inproceedings{berger2002reconsidering,
+  author    = {Berger, Emery D. and Zorn, Benjamin G. and McKinley, Kathryn S.},
+  title     = {Reconsidering Custom Memory Allocation},
+  booktitle = {OOPSLA},
+  year      = {2002}
+}
+
+@inproceedings{berger2000hoard,
+  author    = {Berger, Emery D. and McKinley, Kathryn S. and Blumofe, Robert D. and Wilson, Paul R.},
+  title     = {Hoard: A Scalable Memory Allocator for Multithreaded Applications},
+  booktitle = {ASPLOS},
+  year      = {2000}
+}
+
+@inproceedings{tofte1994regions,
+  author    = {Tofte, Mads and Talpin, Jean-Pierre},
+  title     = {Implementation of the Typed Call-by-Value $\lambda$-Calculus Using a Stack of Regions},
+  booktitle = {POPL},
+  year      = {1994}
+}
+
+@inproceedings{grossman2002cyclone,
+  author    = {Grossman, Dan and Morrisett, Greg and Jim, Trevor and Hicks, Michael and Wang, Yanling and Cheney, James},
+  title     = {Region-Based Memory Management in Cyclone},
+  booktitle = {PLDI},
+  year      = {2002}
+}
+
+@misc{rtemsdocs,
+  author       = {{RTEMS Project}},
+  title        = {RTEMS Classic API Guide: Partition Manager and Region Manager},
+  howpublished = {RTEMS documentation},
+  year         = {2024}
+}
+
+@misc{arinc653,
+  author       = {{Aeronautical Radio Inc.}},
+  title        = {ARINC 653: Avionics Application Software Standard Interface (APEX)},
+  howpublished = {ARINC Specification 653, Part 1},
+  year         = {1997}
+}
+
+@inproceedings{klein2009sel4,
+  author    = {Klein, Gerwin and Elphinstone, Kevin and Heiser, Gernot and Andronick, June and Cock, David and Derrin, Philip and Elkaduwe, Dhammika and Engelhardt, Kai and Kolanski, Rafal and Norrish, Michael and Sewell, Thomas and Tuch, Harvey and Winwood, Simon},
+  title     = {seL4: Formal Verification of an {OS} Kernel},
+  booktitle = {SOSP},
+  year      = {2009}
+}
+
+@misc{erlangertsalloc,
+  author       = {{Ericsson AB}},
+  title        = {erts\_alloc: Erlang Run-Time System Application (ERTS) allocator documentation},
+  howpublished = {Erlang/OTP documentation},
+  year         = {2024}
+}
+
+@misc{glibcmalloc,
+  author       = {{Free Software Foundation}},
+  title        = {The {GNU} C Library, {malloc/arena.c}: Malloc Implementation for Multiple Threads Without Lock Contention},
+  howpublished = {glibc source, contributed by Wolfram Gloger},
+  year         = {2001},
+  note         = {heap\_for\_ptr / arena\_for\_chunk: owner recovery by masking}
+}
+
+@misc{linuxdocs,
+  author       = {{The Linux Kernel Community}},
+  title        = {Linux Kernel Documentation: buddy allocator, {SLUB}, genalloc, memblock, {DMA-API}, page\_owner, kmem ftrace tracepoints, zsmalloc, zswap},
+  howpublished = {kernel documentation},
+  year         = {2024}
+}
+
+@misc{zephyrdocs,
+  author       = {{Zephyr Project}},
+  title        = {Zephyr Documentation: Memory Slabs, Memory Pools, Memory Heaps},
+  howpublished = {Zephyr Project documentation},
+  year         = {2024}
+}
+
+@misc{freertosdocs,
+  author       = {{FreeRTOS}},
+  title        = {FreeRTOS Heap Memory Management (heap\_1 to heap\_5)},
+  howpublished = {FreeRTOS documentation},
+  year         = {2024}
+}
+
+@inproceedings{atienza2004methodology,
+  author    = {Atienza, David and Mamagkakis, Stylianos and Catthoor, Francky and Mendias, Jose M. and Soudris, Dimitrios},
+  title     = {Dynamic Memory Management Design Methodology for Reduced Memory Footprint in Multimedia and Wireless Network Applications},
+  booktitle = {DATE},
+  pages     = {532--537},
+  year      = {2004}
+}
+
+@article{atienza2006systematic,
+  author  = {Atienza, David and Mendias, Jose M. and Mamagkakis, Stylianos and Soudris, Dimitrios and Catthoor, Francky},
+  title   = {Systematic Dynamic Memory Management Design Methodology for Reduced Memory Footprint},
+  journal = {ACM Transactions on Design Automation of Electronic Systems},
+  volume  = {11},
+  number  = {2},
+  pages   = {465--489},
+  year    = {2006},
+  doi     = {10.1145/1142155.1142165}
+}
+
+@article{risco2011simulation,
+  author  = {Risco-Mart{\'i}n, Jos{\'e} L. and Colmenar, J. Manuel and Atienza, David and Hidalgo, J. Ignacio},
+  title   = {Simulation of High-Performance Memory Allocators},
+  journal = {Microprocessors and Microsystems},
+  volume  = {35},
+  number  = {8},
+  pages   = {755--765},
+  year    = {2011},
+  doi     = {10.1016/j.micpro.2011.08.003},
+  note    = {Earlier version DSD 2010; preprint arXiv:2406.15776, 2024}
+}
+
+@mastersthesis{heikkila2012study,
+  author = {Heikkil{\"a}, Valtteri},
+  title  = {A Study on Dynamic Memory Allocation Mechanisms for Small Block Sizes in Real-Time Embedded Systems},
+  school = {University of Oulu},
+  year   = {2012},
+  note   = {Department of Information Processing Science; secondary survey}
+}
+
+@mastersthesis{duchniewicz2024space,
+  author = {Duchniewicz, Szymon},
+  title  = {Improving the Space Efficiency of Dynamic Memory Allocation in an Experimental Capability-Based Operating System},
+  school = {University College London},
+  year   = {2024},
+  note   = {CantripOS / seL4 untyped memory fragmentation}
+}
+
+@misc{kleen2006memory,
+  author       = {Kleen, Andi},
+  title        = {Where Is the Memory Going? Memory Waste under {Linux}},
+  howpublished = {Linux Kongress},
+  year         = {2006},
+  note         = {Measurements on a system fresh after boot}
+}
+
+@misc{fine2026iscandar,
+  author       = {Fine, Andrew Jonathan},
+  title        = {An Extension of Buddy Systems to Arbitrary Radix for Deterministic Memory Allocation},
+  howpublished = {Monograph (Iscandar 45), Zenodo},
+  year         = {2026},
+  doi          = {10.5281/zenodo.23748412},
+  note         = {Software and archive: github.com/IronAutie/iscandar, release v1.0.0}
+}
