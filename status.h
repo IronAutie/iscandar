@@ -5,8 +5,8 @@
 #ifndef ISCANDAR_STATUS_H
 #define ISCANDAR_STATUS_H
 
-#define SUCCESS        0  /* Status.py:13 (defined); GammaCheck.py:64 */
-#define FAIL           1  /* Status.py:14 (defined); Commit.c:57; Error.py:26; GammaCheck.py:44; PlanesCheck.py:49; allocator.py:51; allocator.py:72; allocator.py:89; allocator.py:153; allocator.py:169; allocator.py:177; allocator.py:182; allocator.py:186; allocator.py:192 */
+#define SUCCESS        0  /* Status.py:13 (defined); GammaCheck.py:64; MPUPointer.c:16; MPUPointer.c:57; MPUPointer.c:91; MPUPointer.c:139; Nothing.c:22 */
+#define FAIL           1  /* Status.py:14 (defined); Commit.c:57; Error.c:23; Error.py:26; GammaCheck.py:44; MPUPointer.c:13; MPUPointer.c:31; MPUPointer.c:34; MPUPointer.c:37; MPUPointer.c:40; MPUPointer.c:87; PlanesCheck.py:49; allocator.py:51; allocator.py:72; allocator.py:89; allocator.py:153; allocator.py:169; allocator.py:177; allocator.py:182; allocator.py:186; allocator.py:192 */
 #define NANO_FAIL      2  /* Status.py:15 (defined); Nano.py:29; Nano.py:31; Nano.py:44; oracle_smoke_test.py:107; oracle_smoke_test.py:109; oracle_smoke_test.py:112 */
 #define KEYRANGE       3  /* Status.py:16 (defined) */
 #define FAIL_OVERLAY   4  /* Status.py:18 (defined); Commit.c:88; Commit.c:92; Commit.c:116; Commit.c:119; Commit.c:123; Commit.c:126; Commit.c:136; Commit.c:140; Commit.c:148; Commit.c:152 */
