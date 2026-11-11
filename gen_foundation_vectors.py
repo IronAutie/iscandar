@@ -15,9 +15,10 @@ class edges of the design: 0, 1, 8, 9, 32, 33, 64, 65, 1024,
 1025, 32767, 32768.
 
 Refusals: the Python raises ValueError; the generator catches
-it and prints the status the C returns for the same refusal,
-Status.FAIL. Any other exception is a generator bug and is
-allowed to propagate.
+it and prints the per-site status the C returns for the same
+refusal (the POINTER_* codes in Status.py, the canonical
+home; each case below names its site). Any other exception
+is a generator bug and is allowed to propagate.
 
 Usage: python gen_foundation_vectors.py   (from the engine
 folder; needs bitstruct for MPUPointer, so use the venv)
@@ -140,34 +141,37 @@ for (s, c, order, name) in [(1025, 9, MOTOROLA, "motorola"),
         f"sector={co.sector} row={co.row} plane={co.plane}")
 
 # --- MPUPointer refusals --------------------------------------
-def refuse(desc, thunk):
+def refuse(desc, code, thunk):
     try:
         thunk()
     except ValueError:
-        lines.append(f"mpu refuse {desc} -> status={Status.FAIL}")
+        lines.append(f"mpu refuse {desc} -> status={code}")
         return
     raise AssertionError(f"expected ValueError: {desc}")
 
 
-refuse("load start=32768 count=1",
+refuse("load start=32768 count=1", Status.POINTER_LOAD_START_FAIL,
        lambda: MPUPointer.load(32768, 1))
-refuse("load start=-1 count=1",
+refuse("load start=-1 count=1", Status.POINTER_LOAD_START_FAIL,
        lambda: MPUPointer.load(-1, 1))
-refuse("load start=0 count=0",
+refuse("load start=0 count=0", Status.POINTER_LOAD_COUNT_FAIL,
        lambda: MPUPointer.load(0, 0))
-refuse("load start=0 count=32769",
+refuse("load start=0 count=32769", Status.POINTER_LOAD_COUNT_FAIL,
        lambda: MPUPointer.load(0, 32769))
 refuse("load start=0 count=1 reserved=2",
+       Status.POINTER_LOAD_RESERVED_FAIL,
        lambda: MPUPointer.load(0, 1, reserved=2))
 refuse("load start=0 count=1 order=bogus",
+       Status.POINTER_LOAD_ORDER_FAIL,
        lambda: MPUPointer.load(0, 1, 0, "bogus"))
-refuse("adopt word=4294967296",
+refuse("adopt word=4294967296", Status.POINTER_ADOPT_WORD_FAIL,
        lambda: MPUPointer(1 << 32))
-refuse("adopt word=-1",
+refuse("adopt word=-1", Status.POINTER_ADOPT_WORD_FAIL,
        lambda: MPUPointer(-1))
-refuse("unload order=bogus",
+refuse("unload order=bogus", Status.POINTER_UNLOAD_ORDER_FAIL,
        lambda: MPUPointer(0).unload("bogus"))
 refuse("load_coordinate disp=32768 count=1",
+       Status.POINTER_LOAD_START_FAIL,
        lambda: MPUPointer.load_coordinate(bij.to_coordinate(32768), 1))
 
 # --- Nothing ----------------------------------------------------

@@ -34,13 +34,15 @@
  * word outside its range, and never masks or truncates
  * silently, because a reliable pointer cannot be built by
  * quietly changing the caller's numbers. The C returns a
- * status instead: FAIL for every refusal, the one generic
- * caller-error code Status.py defines for this boundary
- * (Commit.c's precedent: caller error returns FAIL). No
- * pointer-specific range code exists in Status.py, and none
- * is invented here. On FAIL the output is not written, in the
- * check-then-set spirit of the commit path: a refused call
- * changes nothing. */
+ * status instead: one per-site code per distinct refusal
+ * site, named in Status.py (POINTER_ADOPT_WORD_FAIL,
+ * POINTER_LOAD_RESERVED_FAIL, POINTER_LOAD_START_FAIL,
+ * POINTER_LOAD_COUNT_FAIL, POINTER_LOAD_ORDER_FAIL,
+ * POINTER_UNLOAD_ORDER_FAIL; added 2026-11-10, superseding
+ * the foundation tranche's generic FAIL at these sites). On
+ * a refusal the output is not written, in the check-then-set
+ * spirit of the commit path: a refused call changes
+ * nothing. */
 
 #ifndef ISCANDAR_MPUPOINTER_H
 #define ISCANDAR_MPUPOINTER_H
@@ -77,15 +79,19 @@ typedef struct {
  * takes an unbounded int and refuses anything outside
  * 0..MAX_WORD, so the C takes a uint64_t and refuses what a
  * uint32_t input could not even express. On SUCCESS *word_out
- * holds the word, unchanged. */
+ * holds the word, unchanged. The refusal is
+ * POINTER_ADOPT_WORD_FAIL. */
 __declspec(dllexport)
 int32_t mpupointer_adopt(uint64_t word, uint32_t *word_out);
 
 /* MPUPointer.load(start, count, reserved=0, order=MOTOROLA):
  * pack named fields into a word, the Virtual flag raised.
- * `count` is the true count. Refuses (FAIL): reserved not 0
- * or 1, start outside 0..MAX_START, count outside
- * 1..MAX_COUNT, unknown order. There is deliberately no
+ * `count` is the true count. Refuses, each with its own
+ * per-site code: reserved not 0 or 1
+ * (POINTER_LOAD_RESERVED_FAIL), start outside 0..MAX_START
+ * (POINTER_LOAD_START_FAIL), count outside 1..MAX_COUNT
+ * (POINTER_LOAD_COUNT_FAIL), unknown order
+ * (POINTER_LOAD_ORDER_FAIL). There is deliberately no
  * check that start + count fits the cube, because the Python
  * has none: fields are validated, geometry is not. */
 __declspec(dllexport)
@@ -105,7 +111,7 @@ int32_t mpupointer_load_coordinate(const Coordinate *coordinate,
 
 /* unload(order=MOTOROLA): the word's fields, with the count
  * back in true form. Any 32-bit word unloads; only an unknown
- * order is refused. */
+ * order is refused (POINTER_UNLOAD_ORDER_FAIL). */
 __declspec(dllexport)
 int32_t mpupointer_unload(uint32_t word, int order,
                           MPUPointerFields *fields_out);

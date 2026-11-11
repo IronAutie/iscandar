@@ -10,7 +10,7 @@ int32_t mpupointer_adopt(uint64_t word, uint32_t *word_out)
 {
     /* __new__: not 0 <= word <= MAX_WORD is refused. */
     if (word > (uint64_t)MPUPOINTER_MAX_WORD) {
-        return FAIL;
+        return POINTER_ADOPT_WORD_FAIL;
     }
     *word_out = (uint32_t)word;
     return SUCCESS;
@@ -24,20 +24,22 @@ int32_t mpupointer_load(uint32_t start, uint32_t count,
 
     /* Creation always raises Virtual: virtual = 1, below. The
      * Python validates reserved, then start, then count, then
-     * dispatches on order; every refusal is the same FAIL, so
-     * the order of the checks is unobservable. All checks run
-     * before the pack, so a refusal writes nothing. */
+     * dispatches on order; the checks run in that same order
+     * here, each returning its own per-site code, so a call
+     * violating two rules names the site the Python's first
+     * raise names. All checks run before the pack, so a
+     * refusal writes nothing. */
     if (reserved != 0 && reserved != 1) {
-        return FAIL;
+        return POINTER_LOAD_RESERVED_FAIL;
     }
     if (start > (uint32_t)MPUPOINTER_MAX_START) {
-        return FAIL;
+        return POINTER_LOAD_START_FAIL;
     }
     if (count < 1 || count > (uint32_t)MPUPOINTER_MAX_COUNT) {
-        return FAIL;
+        return POINTER_LOAD_COUNT_FAIL;
     }
     if (order != MPUPOINTER_MOTOROLA && order != MPUPOINTER_INTEL) {
-        return FAIL;
+        return POINTER_LOAD_ORDER_FAIL;
     }
 
     stored = count - 1;
@@ -84,7 +86,7 @@ int32_t mpupointer_unload(uint32_t word, int order,
         fields_out->start    = (word >> 15) & 0x7FFFu;
         stored               = word & 0x7FFFu;
     } else {
-        return FAIL;
+        return POINTER_UNLOAD_ORDER_FAIL;
     }
     /* The count back in true form: stored + 1. */
     fields_out->count = stored + 1;

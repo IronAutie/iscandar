@@ -82,16 +82,16 @@ mpu adopt word=0xFFFFFFFF -> v=1 r=1 start=32767 count=32768
 mpu adopt word=0xDEADBEEF -> v=1 r=1 start=15707 count=16112
 mpu coordinate start=1025 count=9 order=motorola -> sector=1 row=0 plane=1
 mpu coordinate start=32767 count=1 order=intel -> sector=31 row=31 plane=31
-mpu refuse load start=32768 count=1 -> status=1
-mpu refuse load start=-1 count=1 -> status=1
-mpu refuse load start=0 count=0 -> status=1
-mpu refuse load start=0 count=32769 -> status=1
-mpu refuse load start=0 count=1 reserved=2 -> status=1
-mpu refuse load start=0 count=1 order=bogus -> status=1
-mpu refuse adopt word=4294967296 -> status=1
-mpu refuse adopt word=-1 -> status=1
-mpu refuse unload order=bogus -> status=1
-mpu refuse load_coordinate disp=32768 count=1 -> status=1
+mpu refuse load start=32768 count=1 -> status=22
+mpu refuse load start=-1 count=1 -> status=22
+mpu refuse load start=0 count=0 -> status=23
+mpu refuse load start=0 count=32769 -> status=23
+mpu refuse load start=0 count=1 reserved=2 -> status=21
+mpu refuse load start=0 count=1 order=bogus -> status=24
+mpu refuse adopt word=4294967296 -> status=20
+mpu refuse adopt word=-1 -> status=20
+mpu refuse unload order=bogus -> status=25
+mpu refuse load_coordinate disp=32768 count=1 -> status=22
 nothing range -> lo=0 hi=0 len=1
 nothing call request=0 -> 0
 nothing call request=7 -> 0

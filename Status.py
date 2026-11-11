@@ -72,6 +72,27 @@ class Status:
                     # plane is not empty, or the two edges
                     # together cannot cover the remainder
                     # plus one plane. Named for breakpointing.
+    POINTER_ADOPT_WORD_FAIL = 20  # MPUPointer adoption: the
+                    # word is outside 0..MAX_WORD. Named for
+                    # breakpointing (per-site pointer codes,
+                    # 2026-11-10: the foundation tranche returned
+                    # generic FAIL at every pointer refusal).
+    POINTER_LOAD_RESERVED_FAIL = 21  # MPUPointer.load: the
+                    # reserved field is not 0 or 1. Named for
+                    # breakpointing.
+    POINTER_LOAD_START_FAIL = 22  # MPUPointer.load: the start
+                    # is outside 0..MAX_START. Named for
+                    # breakpointing.
+    POINTER_LOAD_COUNT_FAIL = 23  # MPUPointer.load: the count
+                    # is outside 1..MAX_COUNT. Named for
+                    # breakpointing.
+    POINTER_LOAD_ORDER_FAIL = 24  # MPUPointer.load: the order
+                    # is neither MOTOROLA nor INTEL. Named for
+                    # breakpointing.
+    POINTER_UNLOAD_ORDER_FAIL = 25  # MPUPointer.unload: the
+                    # order is neither MOTOROLA nor INTEL (also
+                    # the refusal mpupointer_coordinate
+                    # propagates). Named for breakpointing.
 
     """Gear statuses (used across the C boundary by Gears.py and
     the gears themselves; separate names, and a nonzero success,
